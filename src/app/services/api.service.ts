@@ -29,4 +29,10 @@ export class ApiService {
       )
       .pipe(map((res) => res));
   }
+
+  public getStatistics() {
+    return this.httpClient
+      .get(`${this.baseUrl}/statistics`)
+      .pipe(map((res) => res));
+  }
 }

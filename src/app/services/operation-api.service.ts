@@ -64,4 +64,10 @@ export class OperationApiService {
         })
       );
   }
+
+  public getOpeartorStation() {
+    return this.httpClient
+      .get(`${this.baseUrl}/station/operator`)
+      .pipe(map((res) => res));
+  }
 }
