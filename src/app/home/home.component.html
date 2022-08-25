@@ -1,0 +1,124 @@
+<div class="row" style="margin-top: 2rem">
+  <div class="col">
+    <mat-card>
+      <div class="row">
+        <div class="col-10">Số lượng công việc</div>
+        <div class="col-1">
+          <button
+            mat-mini-fab
+            style="background-color: #c91828; color: #ffffff"
+            disabled="true"
+          >
+            <span class="material-symbols-outlined"> assignment </span>
+          </button>
+        </div>
+      </div>
+      <div class="statistics-number">{{ total_operation }}</div>
+      <!-- <div>
+        <span class="statistics-rate-failed"
+          ><span class="material-symbols-rounded"> expand_more </span
+          >12.1%</span
+        >
+        <span style="margin-left: 2rem"><i>so với tháng trước</i></span>
+      </div> -->
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card>
+      <div class="row">
+        <div class="col-10">Số lượng công việc đã hoàn thành</div>
+        <div class="col-1">
+          <button
+            mat-mini-fab
+            style="background-color: #004aae; color: #ffffff"
+            disabled="true"
+          >
+            <span class="material-symbols-outlined"> done </span>
+          </button>
+        </div>
+      </div>
+      <div class="statistics-number">{{ total_completed_operation }}</div>
+      <!-- <div>
+        <span class="statistics-rate-success"
+          ><span class="material-symbols-rounded"> expand_less </span
+          >12.1%</span
+        >
+        <span style="margin-left: 2rem"><i>so với tháng trước</i></span>
+      </div> -->
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card>
+      <div class="row">
+        <div class="col-10">Số lượng công việc còn lại</div>
+        <div class="col-1">
+          <button
+            mat-mini-fab
+            style="background-color: #fcb11f; color: #ffffff"
+            disabled="true"
+          >
+            <span class="material-symbols-outlined"> hive </span>
+          </button>
+        </div>
+      </div>
+      <div class="statistics-number">{{ total_uncompleted_operation }}</div>
+      <!-- <div>
+        <span class="statistics-rate-failed"
+          ><span class="material-symbols-rounded"> expand_more </span
+          >12.1%</span
+        >
+        <span style="margin-left: 2rem"><i>so với tháng trước</i></span>
+      </div> -->
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card>
+      <div class="row">
+        <div class="col-10">Số lượng trạm quản lí</div>
+        <div class="col-1">
+          <button
+            mat-mini-fab
+            style="background-color: #018162; color: #ffffff"
+            disabled="true"
+          >
+            <span class="material-symbols-outlined"> wifi_tethering </span>
+          </button>
+        </div>
+      </div>
+      <div class="statistics-number">{{ total_station }}</div>
+      <!-- <div>
+        <span class="statistics-rate-success"
+          ><span class="material-symbols-rounded"> expand_less </span
+          >12.1%</span
+        >
+        <span style="margin-left: 2rem"><i>so với tháng trước</i></span>
+      </div> -->
+    </mat-card>
+  </div>
+</div>
+<div class="row" style="margin-top: 2rem">
+  <div class="col-3">
+    <mat-card>
+      <fusioncharts
+        width="100%"
+        height="{{ chartHeight }}"
+        type="Pie2D"
+        dataFormat="{{ dataFormat }}"
+        [dataSource]="pieData"
+      >
+      </fusioncharts>
+    </mat-card>
+  </div>
+  <div class="col-9">
+    <mat-card
+      ><fusioncharts
+        width="100%"
+        height="{{ chartHeight }}"
+        type="msline"
+        dataFormat="{{ dataFormat }}"
+        [dataSource]="lineData"
+      >
+      </fusioncharts
+    ></mat-card>
+  </div>
+</div>

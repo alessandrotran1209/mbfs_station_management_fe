@@ -1,0 +1,240 @@
+<div class="station-container">
+  <h3>TÌM KIẾM</h3>
+  <div class="container-fluid">
+    <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
+      <div class="row">
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Mã trạm</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  placeholder="Điền mã trạm"
+                  formControlName="code"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Tỉnh</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="province"
+                  (selectionChange)="updateProvince($event.value)"
+                >
+                  <mat-option
+                    *ngFor="let food of province_list"
+                    [value]="food.value"
+                  >
+                    {{ food.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Quận/ Huyện</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="district">
+                  <mat-option
+                    *ngFor="let food of districts"
+                    [value]="food.value"
+                  >
+                    {{ food.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Công việc</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="work">
+                  <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Trạng thái</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="district">
+                  <mat-option
+                    *ngFor="let district of status_list"
+                    [value]="district.value"
+                  >
+                    {{ district.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1 d-flex align-items-center justify-content-end">
+          <div class="search-button">
+            <button
+              mat-raised-button
+              type="submit"
+              class="button-search btn btn-lg"
+            >
+              Tìm kiếm
+            </button>
+          </div>
+        </div>
+        <div class="col-sm-1 d-flex align-items-center justify-content-end">
+          <div class="search-clear">
+            <button
+              mat-flat-button
+              class="button-clear btn btn-lg"
+              (click)="clearForm()"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="statistics -chart">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-3 d-flex justify-content-end"
+            style="margin-right: 3rem; margin-top: 1.5rem"
+          >
+            <button
+              mat-fab
+              disabled="true"
+              class="icon-unfinished"
+              style="background-color: #c91828; color: #ffffff"
+            >
+              <span class="material-symbols-outlined"> close </span>
+            </button>
+          </div>
+          <div class="col d-flex justify-content-start" class="height: 10rem">
+            <div>Tổng số công việc chưa hoàn thành</div>
+            <div class="statistics-number-failed">2</div>
+            <div>
+              <span class="statistics-rate-failed"
+                ><span class="material-symbols-rounded"> expand_more </span
+                >12.1%</span
+              >
+              <span style="margin-left: 2rem">so với tháng trước</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div
+            class="col-3 d-flex justify-content-end"
+            style="margin-right: 3rem; margin-top: 1.5rem"
+          >
+            <button
+              mat-fab
+              disabled="true"
+              class="icon-done"
+              style="background-color: #1bcba1; color: #ffffff"
+            >
+              <span class="material-symbols-outlined"> check_circle </span>
+            </button>
+          </div>
+          <div class="col d-flex justify-content-start" class="height: 10rem">
+            <div>Tổng số công việc đã hoàn thành</div>
+            <div class="statistics-number-success">28</div>
+            <div>
+              <span class="statistics-rate-success"
+                ><span class="material-symbols-rounded"> expand_less </span
+                >12.1%</span
+              >
+              <span style="margin-left: 2rem">so với tháng trước</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="row"
+    style="margin-right: 0; margin-top: 3rem; margin-bottom: 2rem"
+  >
+    <div class="col-sm-6 d-flex justify-content-start">
+      <h3>DANH SÁCH CÔNG VIỆC</h3>
+    </div>
+    <div class="col-sm-2 offset-sm-4 d-flex align-items-center">
+      <button mat-flat-button class="button-add btn btn-lg">
+        <span class="material-symbols-outlined"> cloud_download </span>
+        <span>Tải về báo cáo</span>
+      </button>
+    </div>
+  </div>
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>STT</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef>Mã trạm</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.code }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="work">
+      <th mat-header-cell *matHeaderCellDef>Công việc</th>
+      <td mat-cell *matCellDef="let element">{{ element.work }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Ngày làm việc</th>
+      <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex align-items-center" style="padding-left: 3rem">
+          <span
+            *ngIf="element.status == 1"
+            class="material-symbols-rounded status-icon-done"
+          >
+            circle
+          </span>
+          <span *ngIf="element.status == 1">Hoàn thành</span>
+          <span
+            *ngIf="element.status == 0"
+            class="material-symbols-rounded status-icon-not"
+          >
+            circle
+          </span>
+          <span *ngIf="element.status == 0">Chưa hoàn thành</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

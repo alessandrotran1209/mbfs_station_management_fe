@@ -1,0 +1,135 @@
+<div class="station-container">
+  <h3>TÌM KIẾM</h3>
+  <div class="container-fluid">
+    <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
+      <div class="row">
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Mã trạm</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  placeholder="Điền mã trạm"
+                  formControlName="code"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Tỉnh</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="province"
+                  (selectionChange)="updateProvince($event.value)"
+                >
+                  <mat-option *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="search-field">
+            <div class="search-title">Quận/ Huyện</div>
+            <div class="search-input">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="district">
+                  <mat-option
+                    *ngFor="let district of districts"
+                    [value]="district.value"
+                  >
+                    {{ district.viewValue }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-sm-1 offset-sm-4 d-flex align-items-center justify-content-end"
+        >
+          <div class="search-button">
+            <button
+              mat-raised-button
+              type="submit"
+              class="button-search btn btn-lg"
+            >
+              Tìm kiếm
+            </button>
+          </div>
+        </div>
+        <div class="col-sm-1 d-flex align-items-center justify-content-end">
+          <div class="search-clear">
+            <button
+              mat-flat-button
+              class="button-clear btn btn-lg"
+              (click)="clearForm()"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <h3>DANH SÁCH TRẠM</h3>
+  <table mat-table [dataSource]="datasource">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>STT</th>
+      <td mat-cell *matCellDef="let element">{{ element.index }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef>Mã trạm</th>
+      <td mat-cell *matCellDef="let element">
+        <a routerLink="" (click)="openDialog(element)">{{
+          element.station_code
+        }}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="province">
+      <th mat-header-cell *matHeaderCellDef>Tỉnh</th>
+      <td mat-cell *matCellDef="let element">{{ element.province }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="manager">
+      <th mat-header-cell *matHeaderCellDef>Nhân viên quản lí</th>
+      <td mat-cell *matCellDef="let element">{{ element.station_manager }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Số điện thoại</th>
+      <td mat-cell *matCellDef="let element">{{ element.phone_number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="operation">
+      <th mat-header-cell *matHeaderCellDef>Thao tác</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button>
+          <span class="material-symbols-outlined"> call </span>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [length]="total"
+    [pageSize]="10"
+    aria-label="Select page"
+    (page)="pageEvent = getServerData($event)"
+  >
+  </mat-paginator>
+</div>

@@ -1,0 +1,88 @@
+<div class="dialog-header">
+  <div class="row">
+    <div class="col-sm-6"><h2 mat-dialog-title>Cập nhật công việc</h2></div>
+    <div class="col-1 offset-sm-5">
+      <button mat-icon-button class="button-close" (click)="onNoClick('')">
+        <span class="material-symbols-rounded"> close </span>
+      </button>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <div class="info-field">
+        <div class="info-title">Công việc</div>
+        <div class="info-detail">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="selectedValue">
+              <mat-option
+                *ngFor="let operation of operation_list"
+                [value]="operation.value"
+              >
+                {{ operation.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="info-field">
+        <div class="info-title">Mã trạm</div>
+        <div class="info-detail">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="selectedCode">
+              <input matInput [(ngModel)]="searchCode" (input)="onKey()" />
+              <mat-option *ngFor="let station of code" [value]="station.value">
+                {{ station.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="info-field">
+        <div class="info-title">Ngày bắt đầu làm việc</div>
+        <div class="info-detail">
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [max]="maxDate"
+              [(ngModel)]="selectedDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col">
+      <div class="info-title">Ghi chú</div>
+      <div class="info-detail">
+        <mat-form-field appearance="outline">
+          <textarea matInput [ngModel]="data.note"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col d-flex align-items-end">
+      <button
+        mat-flat-button
+        class="button-add btn btn-lg"
+        (click)="updateOperation()"
+      >
+        Cập nhật
+      </button>
+    </div>
+  </div>
+  <div class="map-location"></div>
+</div>
