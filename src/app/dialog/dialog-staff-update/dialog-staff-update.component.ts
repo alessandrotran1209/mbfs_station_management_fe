@@ -25,8 +25,6 @@ export class DialogStaffUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-
     var operation = new Operation();
     for (var i: number = 1; i < operation.getLength(); i++) {
       var option = operation.getOperation(String(i));
@@ -47,7 +45,6 @@ export class DialogStaffUpdateComponent implements OnInit {
         }
 
         this.code = this.station_list;
-        console.log(this.code);
       });
 
     this.selectedValue = this.data.operation_name.value;

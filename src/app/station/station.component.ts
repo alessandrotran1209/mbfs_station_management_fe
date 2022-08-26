@@ -79,7 +79,6 @@ export class StationComponent implements OnInit {
       var formatted_district = { value: d, viewValue: d };
       formatted_districts.push(formatted_district);
     }
-    console.log(formatted_districts);
 
     this.districts = formatted_districts;
   }
@@ -106,8 +105,6 @@ export class StationComponent implements OnInit {
   isSearching: boolean = false;
 
   public getServerData(event?: PageEvent, isSearching?: boolean) {
-    console.log(isSearching, this.isSearching);
-
     if (this.isSearching) {
       let page = 1;
       if (event != null) {

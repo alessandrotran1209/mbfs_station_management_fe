@@ -223,9 +223,7 @@ export class ReportOverviewComponent implements OnInit {
     this.searchForm.reset();
   }
 
-  onFormSubmit(): void {
-    console.log(this.searchForm.value);
-  }
+  onFormSubmit(): void {}
 
   maxDate: Date = new Date();
 }

@@ -109,6 +109,6 @@ export class Operation {
   }
 
   public getLength() {
-    return Object.keys(this.operation).length;
+    return Object.keys(this.operation).length + 1;
   }
 }

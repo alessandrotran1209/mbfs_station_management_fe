@@ -23,8 +23,12 @@
             <div class="search-title">Tháng</div>
             <div class="search-input">
               <mat-form-field appearance="outline">
-                <!-- <mat-label>Month and Year</mat-label> -->
-                <input matInput [matDatepicker]="dp" formControlName="month" />
+                <input
+                  matInput
+                  [matDatepicker]="dp"
+                  [formControl]="date"
+                  [max]="maxDate"
+                />
                 <mat-datepicker-toggle
                   matSuffix
                   [for]="dp"
@@ -41,18 +45,17 @@
             </div>
           </div>
         </div>
-
         <div class="col-sm-2">
           <div class="search-field">
             <div class="search-title">Công việc</div>
             <div class="search-input">
               <mat-form-field appearance="outline">
-                <mat-select
-                  formControlName="province"
-                  (selectionChange)="updateProvince($event.value)"
-                >
-                  <mat-option *ngFor="let food of foods" [value]="food.value">
-                    {{ food.viewValue }}
+                <mat-select formControlName="work_code">
+                  <mat-option
+                    *ngFor="let operation of operation_list"
+                    [value]="operation.value"
+                  >
+                    {{ operation.viewValue }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -64,12 +67,12 @@
             <div class="search-title">Trạng thái</div>
             <div class="search-input">
               <mat-form-field appearance="outline">
-                <mat-select formControlName="district">
+                <mat-select formControlName="status">
                   <mat-option
-                    *ngFor="let district of status_list"
-                    [value]="district.value"
+                    *ngFor="let status of status_list"
+                    [value]="status.value"
                   >
-                    {{ district.viewValue }}
+                    {{ status.viewValue }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -93,6 +96,7 @@
           <div class="search-clear">
             <button
               mat-flat-button
+              type="button"
               class="button-clear btn btn-lg"
               (click)="clearForm()"
             >

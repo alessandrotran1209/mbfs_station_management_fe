@@ -81,8 +81,17 @@ export class ReportStaffComponent implements OnInit {
   ) {}
   total_completed_operation: 0;
   total_uncompleted_operation: 0;
+  operation_list: any[] = [];
   ngOnInit(): void {
     this.reactiveForm();
+    var operation = new Operation();
+    for (var i: number = 1; i < operation.getLength(); i++) {
+      var option = operation.getOperation(String(i));
+      this.operation_list.push({
+        value: option.value,
+        viewValue: option.viewValue,
+      });
+    }
 
     this.apiService.getStatistics().subscribe((response: any) => {
       this.total_completed_operation = response.data.total_completed_operation;
@@ -99,8 +108,8 @@ export class ReportStaffComponent implements OnInit {
     this.searchForm = this.fb.group({
       code: [''],
       month: [''],
-      province: [''],
-      district: [''],
+      work_code: [''],
+      status: [''],
     });
   }
 
@@ -111,117 +120,6 @@ export class ReportStaffComponent implements OnInit {
     'start_date',
     'end_date',
     'status',
-  ];
-
-  foods: Food[] = [
-    {
-      value: 'Xử lý lỗi thiết bị Tủ 2G, 3G và 4G',
-      viewValue: 'Xử lý lỗi thiết bị Tủ 2G, 3G và 4G',
-    },
-    {
-      value:
-        'Xử lý lỗi  RRU, lỗi dây quang, lỗi Feeder, Jumper và anten 2G, 3G, 4G',
-      viewValue:
-        'Xử lý lỗi  RRU, lỗi dây quang, lỗi Feeder, Jumper và anten 2G, 3G, 4G',
-    },
-    {
-      value: 'Xử lý lỗi thiết bị truyền dẫn Viba',
-      viewValue: 'Xử lý lỗi thiết bị truyền dẫn Viba',
-    },
-    {
-      value:
-        'Xử lý lỗi thiết bị truyền dẫn Quang trong trạm: dây nhảy, CSG, ODF, Modul quang…',
-      viewValue:
-        'Xử lý lỗi thiết bị truyền dẫn Quang trong trạm: dây nhảy, CSG, ODF, Modul quang…',
-    },
-    {
-      value: 'Xử lý lỗi các thiết bị phụ trợ: Cảnh báo ngoài, tủ nguồn,…',
-      viewValue: 'Xử lý lỗi các thiết bị phụ trợ: Cảnh báo ngoài, tủ nguồn,…',
-    },
-    {
-      value: 'Thực hiện nâng-hạ cấp cấu hình thiết bị theo yêu cầu của MBF',
-      viewValue: 'Thực hiện nâng-hạ cấp cấu hình thiết bị theo yêu cầu của MBF',
-    },
-    {
-      value:
-        'Đo kiểm xác định điểm đứt cáp quang, triển khai kéo cáp, hàn nối măng xông và treo măng xông',
-      viewValue:
-        'Đo kiểm xác định điểm đứt cáp quang, triển khai kéo cáp, hàn nối măng xông và treo măng xông',
-    },
-    {
-      value: 'Đo kiểm và hiệu chỉnh trống Viba',
-      viewValue: 'Đo kiểm và hiệu chỉnh trống Viba',
-    },
-    {
-      value: 'Kiểm tra, thay thế dây IF viba',
-      viewValue: 'Kiểm tra, thay thế dây IF viba',
-    },
-    {
-      value: 'Đo kiểm, xử lý suy hao cáp..',
-      viewValue: 'Đo kiểm, xử lý suy hao cáp..',
-    },
-    {
-      value: 'Triển khai chạy máy phát điện di động',
-      viewValue: 'Triển khai chạy máy phát điện di động',
-    },
-    {
-      value: 'Triển khai chạy máy phát điện cố định',
-      viewValue: 'Triển khai chạy máy phát điện cố định',
-    },
-    {
-      value: 'Vệ sinh công nghiệp nhà trạm',
-      viewValue: 'Vệ sinh công nghiệp nhà trạm',
-    },
-    {
-      value: 'Tiếp nhận, liên hệ khách hàng theo thông tin PA',
-      viewValue: 'Tiếp nhận, liên hệ khách hàng theo thông tin PA',
-    },
-    {
-      value: 'Đến hiện trường đo kiểm và phối hợp xác định nguyên nhân',
-      viewValue: 'Đến hiện trường đo kiểm và phối hợp xác định nguyên nhân',
-    },
-    {
-      value:
-        'Phối hợp hiệu chỉnh anten, lắp đặt và điều chuyển Smallcell, Repeater',
-      viewValue:
-        'Phối hợp hiệu chỉnh anten, lắp đặt và điều chuyển Smallcell, Repeater',
-    },
-    {
-      value: 'Kiểm tra, cập nhật tuyến cáp định kì',
-      viewValue: 'Kiểm tra, cập nhật tuyến cáp định kì',
-    },
-    {
-      value: 'Bảo dưỡng, căng chùng tuyến cáp nguy cơ mất an toàn..',
-      viewValue: 'Bảo dưỡng, căng chùng tuyến cáp nguy cơ mất an toàn..',
-    },
-    {
-      value:
-        'Phối hợp các bên Điện lực, chiếu sáng, quản lý đô thị để thực hiện các công việc liên quan đến cáp trên cột, trong cống bể…',
-      viewValue:
-        'Phối hợp các bên Điện lực, chiếu sáng, quản lý đô thị để thực hiện các công việc liên quan đến cáp trên cột, trong cống bể…',
-    },
-    {
-      value:
-        'Hỗ trợ các đối  tác ra vào trạm, giám sát công việc tại trạm: bảo dưỡng, lắp đặt, thay thế thiết bị, hạ tầng nhà trạm..',
-      viewValue:
-        'Hỗ trợ các đối  tác ra vào trạm, giám sát công việc tại trạm: bảo dưỡng, lắp đặt, thay thế thiết bị, hạ tầng nhà trạm..',
-    },
-    {
-      value: 'Phối hợp giám sát tuyến cáp Quang',
-      viewValue: 'Phối hợp giám sát tuyến cáp Quang',
-    },
-    {
-      value: 'Tiếp nhận và đóng ticket sự cố trạm quản lý',
-      viewValue: 'Tiếp nhận và đóng ticket sự cố trạm quản lý',
-    },
-    {
-      value: 'Hồ sơ thanh toán tiền điện, thuê nhà trạm',
-      viewValue: 'Hồ sơ thanh toán tiền điện, thuê nhà trạm',
-    },
-    {
-      value: 'Công việc khác ….',
-      viewValue: 'Công việc khác ….',
-    },
   ];
 
   status_list: Food[] = [
@@ -235,40 +133,14 @@ export class ReportStaffComponent implements OnInit {
     },
   ];
 
-  districts_list: any[] = [
-    {
-      province: 'HN',
-      districts: [
-        { value: 'BD', viewValue: 'Ba Đình' },
-        { value: 'CG', viewValue: 'Cầu Giấy' },
-      ],
-    },
-    {
-      province: 'TB',
-      districts: [
-        { value: 'DH', viewValue: 'Đông Hưng' },
-        { value: 'HH', viewValue: 'Hưng Hà' },
-      ],
-    },
-  ];
-
-  districts: any[] = [];
-
-  updateProvince(event: any): void {
-    for (var d of this.districts_list) {
-      if (d.province == event) {
-        this.districts = d.districts;
-        break;
-      }
-    }
-  }
-
   clearForm(): void {
-    this.searchForm.reset();
+    this.reactiveForm();
+    this.date = new FormControl(moment());
+    this.getServerData(null, false);
   }
 
   onFormSubmit(): void {
-    console.log(this.searchForm.value);
+    this.getServerData(null, true);
   }
 
   maxDate: Date = new Date();
@@ -279,26 +151,24 @@ export class ReportStaffComponent implements OnInit {
   pageSize: number = 10;
   length: number;
   total: number;
-  isSearching: boolean = false;
   public getServerData(event?: PageEvent, isSearching?: boolean) {
     if (isSearching) {
       let page = 1;
       if (event != null) {
         page = event.pageIndex + 1;
       }
-      var fromDate = this.datepipe.transform(
-        this.searchForm.value.fromDate,
-        'dd/MM/yyyy'
-      );
-      var toDate = this.datepipe.transform(
-        this.searchForm.value.toDate,
-        'dd/MM/yyyy'
-      );
 
-      let code = this.searchForm.value.code;
+      var startOfMonth = `1/${this.date.value.format(
+        'M'
+      )}/${this.date.value.format('Y')}`;
+
+      var toDate = this.date.value.add(1, 'M');
+      var startOfNextMonth = `1/${toDate.format('M')}/${toDate.format('Y')}`;
+
+      let code = this.searchForm.value.work_code;
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(code, fromDate, toDate, status, page)
+        .searchOperationList(code, startOfMonth, startOfNextMonth, status, page)
         .subscribe(
           (response: any) => {
             this.total = response.total;
@@ -341,6 +211,7 @@ export class ReportStaffComponent implements OnInit {
     }
     return event;
   }
+
   date = new FormControl(moment());
   chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.date.value;
@@ -358,6 +229,5 @@ export class ReportStaffComponent implements OnInit {
     datepicker.close();
 
     this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
-    console.log(this.searchForm.value);
   }
 }

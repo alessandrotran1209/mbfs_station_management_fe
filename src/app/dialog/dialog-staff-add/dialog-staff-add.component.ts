@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
@@ -21,6 +21,7 @@ export class DialogStaffAddComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getLocation();
     this.reactiveForm();
 
     var operation = new Operation();
@@ -35,8 +36,6 @@ export class DialogStaffAddComponent implements OnInit {
     this._operationApiService
       .getOpeartorStation()
       .subscribe((response: any) => {
-        console.log(response);
-
         for (var resp of response.data) {
           this.station_list.push({
             value: resp.station_code,
@@ -67,10 +66,14 @@ export class DialogStaffAddComponent implements OnInit {
   }
 
   onFormSubmit() {
-    this.insertForm.value.date = this.datepipe.transform(
-      this.insertForm.value.date,
-      'dd/MM/yyyy'
+    this.insertForm.setControl(
+      'date',
+      new FormControl(
+        this.datepipe.transform(this.insertForm.value.date, 'dd/MM/yyyy')
+      )
     );
+    this.insertForm.addControl('lat', new FormControl(this.lat));
+    this.insertForm.addControl('lng', new FormControl(this.lng));
     this._operationApiService.insertOperation(this.insertForm.value).subscribe(
       (response: any) => {
         if (response == 200) {
@@ -97,6 +100,23 @@ export class DialogStaffAddComponent implements OnInit {
         };
         this.code.push(option);
       }
+    }
+  }
+  public lat: any;
+  public lng: any;
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: any) => {
+          if (position) {
+            this.lat = position.coords.latitude;
+            this.lng = position.coords.longitude;
+          }
+        },
+        (error: any) => console.log(error)
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
     }
   }
 }
