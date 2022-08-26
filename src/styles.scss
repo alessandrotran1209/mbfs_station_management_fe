@@ -20,6 +20,11 @@ $QLCV-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
+
+$custom-typography: mat.define-typography-config(
+  $font-family: "Work Sans, sans-serif",
+);
+
 $QLCV-theme: mat.define-light-theme(
   (
     color: (
@@ -27,6 +32,7 @@ $QLCV-theme: mat.define-light-theme(
       accent: $QLCV-accent,
       warn: $QLCV-warn,
     ),
+    typography: $custom-typography,
   )
 );
 
