@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
 import { Operation } from 'src/app/utils/operation';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-dialog-staff-add',
   templateUrl: './dialog-staff-add.component.html',
@@ -66,15 +66,15 @@ export class DialogStaffAddComponent implements OnInit {
   }
 
   onFormSubmit() {
-    this.insertForm.setControl(
-      'date',
-      new FormControl(
-        this.datepipe.transform(this.insertForm.value.date, 'dd/MM/yyyy')
-      )
+    var operation_data = this.insertForm.value;
+    operation_data.date = this.datepipe.transform(
+      this.insertForm.value.date,
+      'dd/MM/yyyy'
     );
+
     this.insertForm.addControl('lat', new FormControl(this.lat));
     this.insertForm.addControl('lng', new FormControl(this.lng));
-    this._operationApiService.insertOperation(this.insertForm.value).subscribe(
+    this._operationApiService.insertOperation(operation_data).subscribe(
       (response: any) => {
         if (response == 200) {
           this.onNoClick('Added');
