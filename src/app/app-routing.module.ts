@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StationComponent } from 'src/app/station/station.component';
 import { HomeComponent } from './home/home.component';
+import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
-import { ReportOverviewComponent } from './report/report-overview/report-overview.component';
-import { ReportStaffComponent } from './report/report-staff/report-staff.component';
 import { StaffComponent } from './staff/staff.component';
+import { StationComponent } from './station/station.component';
 const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () =>
+      import('./layout/layout.module').then((m) => m.LayoutModule),
+  },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'station', component: StationComponent },
-  { path: 'work', component: StaffComponent },
-  { path: 'report-staff', component: ReportStaffComponent },
-  { path: 'report-overview', component: ReportOverviewComponent },
+  
+  // { path: '',   redirectTo: '/login', pathMatch: 'full' },
+  // { path: '**',   redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({

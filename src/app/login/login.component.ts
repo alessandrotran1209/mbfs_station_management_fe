@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.isLoggedIn = true;
-      // this.roles = this.tokenStorage.getUser().roles;
+      this.roles = this.tokenStorage.getUser().roles;
     }
   }
   onSubmit(): void {
@@ -40,9 +40,9 @@ export class LoginComponent implements OnInit {
         this.tokenStorage.saveUser(this.authService.getDecodedToken());
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
-        this.sharedService.changeUsername(this.tokenStorage.getUser().sub);
-        this.reloadPage();
+        this.roles = this.tokenStorage.getUser().roles;       
+        this.sharedService.sendData(this.tokenStorage.getUser().sub);
+        this.router.navigate(['']);
       },
       (err) => {
         this.errorMessage = err.error.message;
@@ -51,6 +51,6 @@ export class LoginComponent implements OnInit {
     );
   }
   reloadPage(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/login']);
   }
 }

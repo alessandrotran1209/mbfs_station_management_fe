@@ -23,15 +23,18 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { LoginModule } from './login/login.module';
 import { JWTInterceptorInterceptor } from './auth/jwtinterceptor.interceptor';
+import { LayoutModule } from '@angular/cdk/layout';
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    LayoutModule,
     BrowserAnimationsModule,
     StationModule,
     MatSidenavModule,

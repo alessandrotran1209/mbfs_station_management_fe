@@ -23,7 +23,6 @@ export class JWTInterceptorInterceptor implements HttpInterceptor {
     return next.handle(request).do(
       (event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          // do stuff with response if you want
           if (!this.auth.isAuthenticated()) {
             this.router.navigate(['/login']);
           }
@@ -32,8 +31,6 @@ export class JWTInterceptorInterceptor implements HttpInterceptor {
       (err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401 || err.status === 403) {
-            // redirect to the login route
-            // or show a modal
             this.router.navigate(['/login']);
           }
         }
