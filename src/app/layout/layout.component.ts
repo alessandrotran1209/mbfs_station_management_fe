@@ -78,7 +78,6 @@ export class LayoutComponent implements OnInit {
     this.sharedService.data.subscribe((value) => {
       this.currentUsername = value;
     });
-    console.log(this.currentUsername);
   }
 
   hasChild = (_: number, node: FoodNode) =>
@@ -104,8 +103,6 @@ export class LayoutComponent implements OnInit {
   }
 
   navigate(route: any) {
-    console.log(route);
-
     this.router.navigate([route]);
   }
   isVisible = false;

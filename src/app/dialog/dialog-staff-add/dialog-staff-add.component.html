@@ -24,6 +24,14 @@
                   {{ operation.viewValue }}
                 </mat-option>
               </mat-select>
+              <mat-error
+                class="mat-caption"
+                *ngIf="
+                  insertForm.controls.work_code?.errors?.required
+                "
+              >
+                Hãy chọn công việc
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -46,6 +54,14 @@
                   {{ station.viewValue }}
                 </mat-option>
               </mat-select>
+              <mat-error
+                class="mat-caption"
+                *ngIf="
+                  insertForm.controls.station_code?.errors?.required
+                "
+              >
+                Hãy chọn mã trạm
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -66,6 +82,14 @@
                 [for]="picker"
               ></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+              <mat-error
+                class="mat-caption"
+                *ngIf="
+                  insertForm.controls.date?.errors?.required
+                "
+              >
+                Hãy chọn ngày bắt đầu làm việc
+              </mat-error>
             </mat-form-field>
           </div>
         </div>

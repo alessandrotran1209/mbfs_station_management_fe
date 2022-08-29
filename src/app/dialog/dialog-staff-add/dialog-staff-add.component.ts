@@ -1,6 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
@@ -53,9 +58,9 @@ export class DialogStaffAddComponent implements OnInit {
 
   reactiveForm() {
     this.insertForm = this.fb.group({
-      station_code: [''],
-      date: [''],
-      work_code: [''],
+      station_code: this.fb.control('', [Validators.required]),
+      date: this.fb.control('', [Validators.required]),
+      work_code: this.fb.control('', [Validators.required]),
       search_code: [''],
       note: [''],
     });
@@ -66,24 +71,26 @@ export class DialogStaffAddComponent implements OnInit {
   }
 
   onFormSubmit() {
-    var operation_data = this.insertForm.value;
-    operation_data.date = this.datepipe.transform(
-      this.insertForm.value.date,
-      'dd/MM/yyyy'
-    );
+    if (this.insertForm.valid) {
+      var day = moment(this.insertForm.value.date).format('YYYY-MM-DD');
+      var time = moment().format('HH:mm:ss');      
 
-    this.insertForm.addControl('lat', new FormControl(this.lat));
-    this.insertForm.addControl('lng', new FormControl(this.lng));
-    this._operationApiService.insertOperation(operation_data).subscribe(
-      (response: any) => {
-        if (response == 200) {
-          this.onNoClick('Added');
+      this.insertForm.addControl('lat', new FormControl(this.lat));
+      this.insertForm.addControl('lng', new FormControl(this.lng));
+
+      var operation_data = this.insertForm.value;
+      operation_data.date = day + 'T' + time;
+      this._operationApiService.insertOperation(operation_data).subscribe(
+        (response: any) => {
+          if (response == 200) {
+            this.onNoClick('Added');
+          }
+        },
+        (error) => {
+          console.log(error);
         }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+      );
+    }
   }
 
   onKey() {

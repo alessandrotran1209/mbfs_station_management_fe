@@ -18,6 +18,7 @@ import { DialogStaffUpdateComponent } from '../dialog/dialog-staff-update/dialog
 import { OperationApiService } from '../services/operation-api.service';
 import { Operation } from '../utils/operation';
 import { DatePipe } from '@angular/common';
+import moment from 'moment';
 
 @Component({
   selector: 'app-staff',
@@ -108,7 +109,7 @@ export class StaffComponent implements OnInit {
     }
     var data = {
       station_code: element.station_code,
-      date: element.start_date,
+      date: moment(element.start_date, 'DD/MM/YYYY HH:mm:ss').format("YYYY-MM-DDTHH:mm:ss"),
       work_code: element.operation_name.value,
     };
 
@@ -197,6 +198,11 @@ export class StaffComponent implements OnInit {
           this.pageSize = response.pageSize;
           this.length = response.length;
 
+          // this.datasource.start_date_dateonly = this.datasource.start_date.split()[0]
+          // this.datasource.end_date_dateonly = this.datasource.end_date.split()[0]
+
+          console.log(this.datasource);
+
           var operation = new Operation();
           for (var dat of response.data) {
             dat.operation_name = operation.getOperation(dat.work_code);
@@ -208,6 +214,13 @@ export class StaffComponent implements OnInit {
       );
     }
     return event;
+  }
+
+  public getDateOnly(fullTimestamp: string) {   
+    if(fullTimestamp == undefined){
+      return fullTimestamp;
+    }
+    return fullTimestamp.split(' ')[0];
   }
 
   status_list = [
