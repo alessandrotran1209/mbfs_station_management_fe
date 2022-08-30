@@ -11,6 +11,9 @@ import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
 import { Operation } from 'src/app/utils/operation';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 @Component({
   selector: 'app-dialog-staff-add',
   templateUrl: './dialog-staff-add.component.html',
@@ -42,17 +45,18 @@ export class DialogStaffAddComponent implements OnInit {
       .getOpeartorStation()
       .subscribe((response: any) => {
         for (var resp of response.data) {
-          this.station_list.push({
-            value: resp.station_code,
-            viewValue: resp.station_code,
-          });
+          this.station_list.push(resp.station_code);
         }
-        this.code = this.station_list;
+
+        this.filteredOptions =
+          this.insertForm.controls.station_code.valueChanges.pipe(
+            startWith(''),
+            map((value) => this._filter(value || ''))
+          );
       });
   }
   operation_list: any[] = [];
-  station_list: any[] = [];
-  code: any[] = [];
+  station_list: string[] = [];
   insertForm!: FormGroup;
   maxDate: Date = new Date();
 
@@ -61,7 +65,6 @@ export class DialogStaffAddComponent implements OnInit {
       station_code: this.fb.control('', [Validators.required]),
       date: this.fb.control('', [Validators.required]),
       work_code: this.fb.control('', [Validators.required]),
-      search_code: [''],
       note: [''],
     });
   }
@@ -73,7 +76,7 @@ export class DialogStaffAddComponent implements OnInit {
   onFormSubmit() {
     if (this.insertForm.valid) {
       var day = moment(this.insertForm.value.date).format('YYYY-MM-DD');
-      var time = moment().format('HH:mm:ss');      
+      var time = moment().format('HH:mm:ss');
 
       this.insertForm.addControl('lat', new FormControl(this.lat));
       this.insertForm.addControl('lng', new FormControl(this.lng));
@@ -93,22 +96,6 @@ export class DialogStaffAddComponent implements OnInit {
     }
   }
 
-  onKey() {
-    this.code = [];
-    for (var stationCode of this.station_list) {
-      if (
-        stationCode.viewValue
-          .toLowerCase()
-          .includes(this.insertForm.value.search_code.toLowerCase())
-      ) {
-        var option = {
-          value: stationCode.viewValue,
-          viewValue: stationCode.viewValue,
-        };
-        this.code.push(option);
-      }
-    }
-  }
   public lat: any;
   public lng: any;
   getLocation() {
@@ -125,5 +112,12 @@ export class DialogStaffAddComponent implements OnInit {
     } else {
       alert('Geolocation is not supported by this browser.');
     }
+  }
+  filteredOptions: Observable<string[]>;
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.station_list.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
 }

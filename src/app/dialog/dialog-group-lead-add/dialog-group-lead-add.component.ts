@@ -11,6 +11,9 @@ import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
 import { Operation } from 'src/app/utils/operation';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 @Component({
   selector: 'app-dialog-group-lead-add',
   templateUrl: './dialog-group-lead-add.component.html',
@@ -25,7 +28,7 @@ export class DialogGroupLeadAddComponent implements OnInit {
     public fb: FormBuilder,
     public datepipe: DatePipe
   ) {}
-
+  
   ngOnInit(): void {
     this.reactiveForm();
 
@@ -42,12 +45,12 @@ export class DialogGroupLeadAddComponent implements OnInit {
       .getOpeartorStation()
       .subscribe((response: any) => {
         for (var resp of response.data) {
-          this.station_list.push({
-            value: resp.station_code,
-            viewValue: resp.station_code,
-          });
+          this.station_list.push(resp.station_code);
         }
-        this.code = this.station_list;
+        this.filteredOptions = this.insertForm.controls.station_code.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value || '')),
+        );
       });
 
     this._operationApiService.getOperatorList().subscribe((response: any) => {
@@ -58,13 +61,15 @@ export class DialogGroupLeadAddComponent implements OnInit {
         });
       } 
     })
+
+    
   }
   operation_list: any[] = [];
   operator_list: any[] = [];
-  station_list: any[] = [];
-  code: any[] = [];
+  station_list: string[] = [];
   insertForm!: FormGroup;
   maxDate: Date = new Date();
+  filteredOptions: Observable<string[]>;
 
   reactiveForm() {
     this.insertForm = this.fb.group({
@@ -72,7 +77,6 @@ export class DialogGroupLeadAddComponent implements OnInit {
       date: this.fb.control('', [Validators.required]),
       work_code: this.fb.control('', [Validators.required]),
       operator: this.fb.control('', [Validators.required]),
-      search_code: [''],
       note: [''],
     });
   }
@@ -101,21 +105,11 @@ export class DialogGroupLeadAddComponent implements OnInit {
     }
   }
 
-  onKey() {
-    this.code = [];
-    for (var stationCode of this.station_list) {
-      if (
-        stationCode.viewValue
-          .toLowerCase()
-          .includes(this.insertForm.value.search_code.toLowerCase())
-      ) {
-        var option = {
-          value: stationCode.viewValue,
-          viewValue: stationCode.viewValue,
-        };
-        this.code.push(option);
-      }
-    }
+  private _filter(value: string): string[] {   
+    const filterValue = value.toLowerCase();    
+    return this.station_list.filter(option => option.toLowerCase().includes(filterValue));
   }
+
+  
 
 }

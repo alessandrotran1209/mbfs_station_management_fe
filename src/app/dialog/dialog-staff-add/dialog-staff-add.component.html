@@ -41,19 +41,21 @@
           <div class="info-title">Mã trạm</div>
           <div class="info-detail">
             <mat-form-field appearance="outline">
-              <mat-select formControlName="station_code">
                 <input
-                  matInput
-                  formControlName="search_code"
-                  (input)="onKey()"
-                />
+                type="text"
+                matInput
+                formControlName="station_code"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+
                 <mat-option
-                  *ngFor="let station of code"
-                  [value]="station.value"
+                  *ngFor="let option of filteredOptions | async"
+                  [value]="option"
                 >
-                  {{ station.viewValue }}
+                  {{ option }}
                 </mat-option>
-              </mat-select>
+              </mat-autocomplete>
               <mat-error
                 class="mat-caption"
                 *ngIf="
