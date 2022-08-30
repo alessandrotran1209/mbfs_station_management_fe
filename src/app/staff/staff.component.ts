@@ -19,6 +19,9 @@ import { OperationApiService } from '../services/operation-api.service';
 import { Operation } from '../utils/operation';
 import { DatePipe } from '@angular/common';
 import moment from 'moment';
+import { TokenStorageService } from '../auth/token-storage.service';
+import { AuthService } from '../auth/auth.service';
+import { DialogGroupLeadAddComponent } from '../dialog/dialog-group-lead-add/dialog-group-lead-add.component';
 
 @Component({
   selector: 'app-staff',
@@ -31,7 +34,8 @@ export class StaffComponent implements OnInit {
     public fb: FormBuilder,
     private _snackBar: MatSnackBar,
     public operationApiService: OperationApiService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -60,20 +64,41 @@ export class StaffComponent implements OnInit {
   ];
   dialog_width = window.innerHeight;
   openAddDialog(): void {
-    const dialogRef = this.dialog.open(DialogStaffAddComponent, {
-      width: window.innerWidth * 0.8 + 'px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result == 'Added') {
-        this._snackBar.openFromComponent(PizzaPartyComponent, {
-          data: 'Thêm mới thành công',
-          duration: 2000,
-          panelClass: ['snack-notification'],
-        });
-      }
-      this.getServerData(null, false);
-    });
+    const role = this.authService.getDecodedToken().role
+    
+    if(role == 'operator'){
+      const dialogRef = this.dialog.open(DialogStaffAddComponent, {
+        width: window.innerWidth * 0.8 + 'px',
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result == 'Added') {
+          this._snackBar.openFromComponent(PizzaPartyComponent, {
+            data: 'Thêm mới thành công',
+            duration: 2000,
+            panelClass: ['snack-notification'],
+          });
+        }
+        this.getServerData(null, false);
+      });
+    }
+    if(role == 'group leader'){
+      const dialogRef = this.dialog.open(DialogGroupLeadAddComponent, {
+        width: window.innerWidth * 0.8 + 'px',
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result == 'Added') {
+          this._snackBar.openFromComponent(PizzaPartyComponent, {
+            data: 'Thêm mới thành công',
+            duration: 2000,
+            panelClass: ['snack-notification'],
+          });
+        }
+        this.getServerData(null, false);
+      });
+    }
+    
   }
 
   openUpdateDialog(element: any): void {
@@ -200,8 +225,6 @@ export class StaffComponent implements OnInit {
 
           // this.datasource.start_date_dateonly = this.datasource.start_date.split()[0]
           // this.datasource.end_date_dateonly = this.datasource.end_date.split()[0]
-
-          console.log(this.datasource);
 
           var operation = new Operation();
           for (var dat of response.data) {

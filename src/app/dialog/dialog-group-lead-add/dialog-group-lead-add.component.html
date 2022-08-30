@@ -1,0 +1,147 @@
+<div class="dialog-header">
+    <div class="row">
+      <div class="col-sm-6"><h2 mat-dialog-title>Thêm mới công việc</h2></div>
+      <div class="col-1 offset-sm-5">
+        <button mat-icon-button class="button-close" (click)="onNoClick('')">
+          <span class="material-symbols-rounded"> close </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-content>
+    <form [formGroup]="insertForm" (ngSubmit)="onFormSubmit()">
+      <div class="row">
+        <div class="col">
+          <div class="info-field">
+            <div class="info-title">Công việc</div>
+            <div class="info-detail">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="work_code">
+                  <mat-option
+                    *ngFor="let operation of operation_list"
+                    [value]="operation.value"
+                  >
+                    {{ operation.viewValue }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  class="mat-caption"
+                  *ngIf="
+                    insertForm.controls.work_code?.errors?.required
+                  "
+                >
+                  Hãy chọn công việc
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="info-field">
+            <div class="info-title">Mã trạm</div>
+            <div class="info-detail">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="station_code">
+                  <input
+                    matInput
+                    formControlName="search_code"
+                    (input)="onKey()"
+                  />
+                  <mat-option
+                    *ngFor="let station of code"
+                    [value]="station.value"
+                  >
+                    {{ station.viewValue }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  class="mat-caption"
+                  *ngIf="
+                    insertForm.controls.station_code?.errors?.required
+                  "
+                >
+                  Hãy chọn mã trạm
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <div class="info-field">
+            <div class="info-title">Ngày bắt đầu làm việc</div>
+            <div class="info-detail">
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  formControlName="date"
+                  [max]="maxDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error
+                  class="mat-caption"
+                  *ngIf="
+                    insertForm.controls.date?.errors?.required
+                  "
+                >
+                  Hãy chọn ngày bắt đầu làm việc
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+            <div class="info-field">
+              <div class="info-title">Nhân viên vận hành</div>
+              <div class="info-detail">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="operator">
+                    <input
+                      matInput
+                      (input)="onKey()"
+                    />
+                    <mat-option
+                      *ngFor="let operator of operator_list"
+                      [value]="operator.value"
+                    >
+                      {{ operator.viewValue }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    class="mat-caption"
+                    *ngIf="
+                      insertForm.controls.operator?.errors?.required
+                    "
+                  >
+                    Hãy chọn nhân viên vận hành
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <div class="info-title">Mô tả công việc</div>
+          <div class="info-detail">
+            <mat-form-field appearance="outline">
+              <textarea matInput formControlName="note"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col d-flex align-items-end">
+          <button mat-flat-button class="button-add btn btn-lg" type="submit">
+            Thêm mới
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  

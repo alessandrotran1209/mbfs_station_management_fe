@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogStaffAddComponent } from './dialog-staff-add/dialog-staff-add.component';
 import { DialogStaffUpdateComponent } from './dialog-staff-update/dialog-staff-update.component';
 import { DialogStaffInfoComponent } from './dialog-staff-info/dialog-staff-info.component';
+import { DialogGroupLeadAddComponent } from './dialog-group-lead-add/dialog-group-lead-add.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { DialogStaffInfoComponent } from './dialog-staff-info/dialog-staff-info.
     DialogStaffAddComponent,
     DialogStaffUpdateComponent,
     DialogStaffInfoComponent,
+    DialogGroupLeadAddComponent,
   ],
   imports: [CommonModule, MaterialAllModules, FormsModule, ReactiveFormsModule],
 })
