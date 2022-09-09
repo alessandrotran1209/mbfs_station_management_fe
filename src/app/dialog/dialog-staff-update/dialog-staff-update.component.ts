@@ -50,7 +50,7 @@ export class DialogStaffUpdateComponent implements OnInit {
     this.selectedValue = this.data.operation_name.value;
     this.selectedCode = this.data.station_code;
 
-    const [day, month, year] = this.data.start_date.split('/');
+    const [day, month, year] = this.data.start_date.split(' ')[0].split('/');
 
     this.selectedDate = new Date();
     this.selectedDate.setDate(Number(day));
