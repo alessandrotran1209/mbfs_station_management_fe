@@ -49,6 +49,7 @@ export class DialogStaffUpdateComponent implements OnInit {
 
     this.selectedValue = this.data.operation_name.value;
     this.selectedCode = this.data.station_code;
+    this.note = this.data.note;
 
     const [day, month, year] = this.data.start_date.split(' ')[0].split('/');
 
@@ -69,7 +70,7 @@ export class DialogStaffUpdateComponent implements OnInit {
   maxDate: Date = new Date();
 
   selectedDate: Date;
-
+  note: string;
   onNoClick(message: string): void {
     this.dialogRef.close(message);
   }
@@ -107,8 +108,9 @@ export class DialogStaffUpdateComponent implements OnInit {
       date: update_date,
       work_code: this.selectedValue,
       old_station_code: this.data.station_code,
-      old_date: this.data.date,
+      old_date: this.data.start_date.split(' ')[0],
       old_work_code: this.data.work_code,
+      note: this.note,
     };
 
     this._operationApiService.updateOperation(data).subscribe(

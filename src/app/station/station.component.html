@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-2">
+        <!-- <div class="col-sm-2">
           <div class="search-field">
             <div class="search-title">Tỉnh</div>
             <div class="search-input">
@@ -34,7 +34,7 @@
               </mat-form-field>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="col-sm-2">
           <div class="search-field">
             <div class="search-title">Quận/ Huyện</div>
@@ -43,9 +43,9 @@
                 <mat-select formControlName="district">
                   <mat-option
                     *ngFor="let district of districts"
-                    [value]="district.value"
+                    [value]="district"
                   >
-                    {{ district.viewValue }}
+                    {{ district }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

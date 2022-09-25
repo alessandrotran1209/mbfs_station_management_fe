@@ -27,21 +27,11 @@ export class StationComponent implements OnInit {
     this.reactiveForm();
 
     this.apiService.getStationCodeList().subscribe((res: any) => {
-      this.station_code_province = res.data;
-      let provinces = [];
-      for (var dat of res.data) {
-        this.province_set.add(dat.province);
-      }
-      for (var province of this.province_set) {
-        this.foods.push({ value: province, viewValue: province });
-      }
+      this.districts = res.data;
     });
-
     this.getServerData(null);
   }
-  station_code_province: any;
   searchForm!: FormGroup;
-  province_set = new Set();
   reactiveForm() {
     this.searchForm = this.fb.group({
       code: [''],
@@ -59,7 +49,6 @@ export class StationComponent implements OnInit {
     'operation',
   ];
 
-  dialog_width = window.innerHeight;
   openDialog(data: any): void {
     const dialogRef = this.dialog.open(DialogStationInfoComponent, {
       width: window.innerWidth * (772 / 1920) + 'px',
@@ -71,24 +60,12 @@ export class StationComponent implements OnInit {
   foods: any[] = [];
   districts: any[] = [];
 
-  updateProvince(event: any): void {
-    var district = new Districts();
-    var districts_list = district.getDistrictsList(event);
-    var formatted_districts = [];
-    for (var d of districts_list) {
-      var formatted_district = { value: d, viewValue: d };
-      formatted_districts.push(formatted_district);
-    }
-
-    this.districts = formatted_districts;
-  }
-
   clearForm(): void {
     this.isSearching = false;
     this.getServerData(null, false);
 
-    this.reactiveForm();
-    this.districts = [];
+    this.searchForm.controls['code'].setValue('');
+    this.searchForm.controls['district'].setValue('');
   }
 
   onFormSubmit(): void {
@@ -120,6 +97,10 @@ export class StationComponent implements OnInit {
           this.pageIndex = response.pageIndex;
           this.pageSize = response.pageSize;
           this.length = response.length;
+
+          this.searchForm.controls['province'].setValue(
+            response.data[0].province
+          );
         },
         (error) => {
           // handle error
@@ -137,6 +118,10 @@ export class StationComponent implements OnInit {
           this.pageIndex = response.pageIndex;
           this.pageSize = response.pageSize;
           this.length = response.length;
+
+          this.searchForm.controls['province'].setValue(
+            response.data[0].province
+          );
         },
         (error) => {
           // handle error

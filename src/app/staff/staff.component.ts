@@ -64,13 +64,13 @@ export class StaffComponent implements OnInit {
   ];
   dialog_width = window.innerHeight;
   openAddDialog(): void {
-    const role = this.authService.getDecodedToken().role
-    
-    if(role == 'operator'){
+    const role = this.authService.getDecodedToken().role;
+
+    if (role == 'operator') {
       const dialogRef = this.dialog.open(DialogStaffAddComponent, {
         width: window.innerWidth * 0.8 + 'px',
       });
-  
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result == 'Added') {
           this._snackBar.openFromComponent(PizzaPartyComponent, {
@@ -82,11 +82,11 @@ export class StaffComponent implements OnInit {
         this.getServerData(null, false);
       });
     }
-    if(role == 'group leader'){
+    if (role == 'group leader') {
       const dialogRef = this.dialog.open(DialogGroupLeadAddComponent, {
         width: window.innerWidth * 0.8 + 'px',
       });
-  
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result == 'Added') {
           this._snackBar.openFromComponent(PizzaPartyComponent, {
@@ -98,7 +98,6 @@ export class StaffComponent implements OnInit {
         this.getServerData(null, false);
       });
     }
-    
   }
 
   openUpdateDialog(element: any): void {
@@ -133,8 +132,11 @@ export class StaffComponent implements OnInit {
       return;
     }
     var data = {
+      operator: element.operator,
       station_code: element.station_code,
-      date: moment(element.start_date, 'DD/MM/YYYY HH:mm:ss').format("YYYY-MM-DDTHH:mm:ss"),
+      date: moment(element.start_date, 'DD/MM/YYYY HH:mm:ss').format(
+        'YYYY-MM-DDTHH:mm:ss'
+      ),
       work_code: element.operation_name.value,
     };
 
@@ -239,8 +241,8 @@ export class StaffComponent implements OnInit {
     return event;
   }
 
-  public getDateOnly(fullTimestamp: string) {   
-    if(fullTimestamp == undefined){
+  public getDateOnly(fullTimestamp: string) {
+    if (fullTimestamp == undefined) {
       return fullTimestamp;
     }
     return fullTimestamp.split(' ')[0];
@@ -250,6 +252,10 @@ export class StaffComponent implements OnInit {
     { value: 0, viewValue: 'Chưa hoàn thành' },
     { value: 1, viewValue: 'Hoàn thành' },
   ];
+
+  public isVisible(element: any) {
+    return element.operator != element.assigner;
+  }
 }
 
 @Component({

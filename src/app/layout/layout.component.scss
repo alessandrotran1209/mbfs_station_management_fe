@@ -15,7 +15,7 @@
   .example-sidenav {
     // margin-left: 10px;
     // height: 1rem;
-    width: 12%;
+    width: 15%;
   }
   .example-tree-invisible {
     display: none;
@@ -89,4 +89,14 @@
   .is-active .option-title {
     color: #ffffff;
   }
+
+  @media screen 
+  and (max-device-width: 500px) 
+  and (orientation: portrait) {
+    .example-sidenav {
+      // margin-left: 10px;
+      // height: 1rem;
+      width: 50%;
+    }
+}
   
