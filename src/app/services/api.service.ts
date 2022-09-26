@@ -36,4 +36,10 @@ export class ApiService {
       .get(`${this.baseUrl}/statistics`)
       .pipe(map((res) => res));
   }
+
+  public getTopOperations() {
+    return this.httpClient
+      .get(`${this.baseUrl}/statistics/top`)
+      .pipe(map((res) => res));
+  }
 }
