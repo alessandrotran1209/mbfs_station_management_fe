@@ -105,13 +105,8 @@ export class LayoutComponent implements OnInit {
   navigate(route: any) {
     this.router.navigate([route]);
   }
-  isVisible = false;
-  toggleCard() {
-    this.isVisible = !this.isVisible;
-  }
 
   logOut() {
-    this.isVisible = false;
     this.tokenStorage.signOut();
     this.sharedService.sendData('');
     this.router.navigate(['/login']);

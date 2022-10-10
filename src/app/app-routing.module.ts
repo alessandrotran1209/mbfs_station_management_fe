@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ChangePwComponent } from './login/change-pw/change-pw.component';
 import { LoginComponent } from './login/login.component';
 import { StaffComponent } from './staff/staff.component';
 import { StationComponent } from './station/station.component';
@@ -12,7 +13,8 @@ const routes: Routes = [
       import('./layout/layout.module').then((m) => m.LayoutModule),
   },
   { path: 'login', component: LoginComponent },
-  
+  { path: 'change-password', component: ChangePwComponent },
+
   // { path: '',   redirectTo: '/login', pathMatch: 'full' },
   // { path: '**',   redirectTo: '/login', pathMatch: 'full' },
 ];

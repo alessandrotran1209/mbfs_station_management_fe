@@ -43,10 +43,10 @@ export class StationComponent implements OnInit {
   displayedColumns: string[] = [
     'position',
     'code',
-    'province',
-    'manager',
-    'phone',
-    'operation',
+    // 'province',
+    // 'manager',
+    // 'phone',
+    // 'operation',
   ];
 
   openDialog(data: any): void {

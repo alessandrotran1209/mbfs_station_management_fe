@@ -73,18 +73,30 @@
         QUẢN LÍ NHÀ TRẠM
       </div>
       <div class="col d-flex justify-content-end">
-        <div
-          *ngIf="isVisible"
-          style="position: absolute; z-index: 10; margin-right: 5rem"
-        >
-          <mat-card
-            ><button mat-flat-button (click)="logOut()">
-              Log out
-            </button></mat-card
-          >
-        </div>
+        <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+          <!-- Messages Dropdown Menu -->
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <span class="name" style="padding-right: 10px">{{
+                currentUsername
+              }}</span>
+              <span class="avatar">
+                <span class="material-symbols-outlined"> account_circle </span>
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+              <a class="dropdown-item" href="/change-password">
+                <button mat-button>Đổi mật khẩu</button>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item">
+                <button mat-button (click)="logOut()">Đăng xuất</button>
+              </a>
+            </div>
+          </li>
+        </ul>
         <div>
-          <button mat-button (click)="toggleCard()">
+          <button mat-flat-button>
             <span class="name" style="padding-right: 10px">{{
               currentUsername
             }}</span>

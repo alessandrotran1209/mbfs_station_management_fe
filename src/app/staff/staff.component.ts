@@ -44,6 +44,8 @@ export class StaffComponent implements OnInit {
     this.getServerData(null, false);
   }
   searchForm!: FormGroup;
+  panelOpenState = false;
+
   reactiveForm() {
     this.searchForm = this.fb.group({
       code: [''],
@@ -57,8 +59,6 @@ export class StaffComponent implements OnInit {
     'position',
     'code',
     'work',
-    'start_date',
-    'end_date',
     'status',
     'operation',
   ];
@@ -194,7 +194,7 @@ export class StaffComponent implements OnInit {
       let code = this.searchForm.value.code;
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(code, fromDate, toDate, status, page)
+        .searchOperationList(code, fromDate, toDate, '', status, page)
         .subscribe(
           (response: any) => {
             this.total = response.total;

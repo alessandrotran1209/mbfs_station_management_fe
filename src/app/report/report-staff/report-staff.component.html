@@ -28,6 +28,7 @@
                   [matDatepicker]="dp"
                   [formControl]="date"
                   [max]="maxDate"
+                  (click)="dp.open()"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -183,7 +184,7 @@
       <h3>DANH SÁCH CÔNG VIỆC</h3>
     </div>
     <div class="col-sm-2 offset-sm-4 d-flex align-items-center">
-      <button mat-flat-button class="button-add btn btn-lg">
+      <button mat-flat-button class="button-add btn btn-lg" (click)="export()">
         <span class="material-symbols-outlined"> cloud_download </span>
         <span>Tải về báo cáo</span>
       </button>

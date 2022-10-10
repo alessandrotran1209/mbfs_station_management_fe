@@ -25,4 +25,14 @@ export class AuthenService {
         })
       );
   }
+
+  public changePassword(changePasswordForm: any) {
+    return this.httpClient.post(
+      `${this.baseUrl}/change-pw`,
+      changePasswordForm,
+      {
+        observe: 'response',
+      }
+    );
+  }
 }

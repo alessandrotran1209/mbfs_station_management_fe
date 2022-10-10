@@ -28,8 +28,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent
-  ],
+  declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

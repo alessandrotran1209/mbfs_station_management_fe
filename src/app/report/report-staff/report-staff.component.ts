@@ -25,6 +25,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
+import { ExportService } from 'src/app/services/export.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -77,7 +78,8 @@ export class ReportStaffComponent implements OnInit {
     public fb: FormBuilder,
     private apiService: ApiService,
     public operationApiService: OperationApiService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private exportService: ExportService
   ) {}
   total_completed_operation: 0;
   total_uncompleted_operation: 0;
@@ -158,17 +160,27 @@ export class ReportStaffComponent implements OnInit {
         page = event.pageIndex + 1;
       }
 
-      var startOfMonth = `1/${this.date.value.format(
-        'M'
-      )}/${this.date.value.format('Y')}`;
+      const fromDate = this.date.value.add(1, 'M');
+      var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
 
-      var toDate = this.date.value.add(1, 'M');
-      var startOfNextMonth = `1/${toDate.format('M')}/${toDate.format('Y')}`;
+      const toDate = fromDate.add(1, 'M');
+      var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
 
-      let code = this.searchForm.value.work_code;
+      this.date.setValue(this.date.value.subtract(2, 'M'));
+
+      let code = this.searchForm.value.code;
+      const work_code = this.searchForm.value.work_code;
+
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(code, startOfMonth, startOfNextMonth, status, page)
+        .searchOperationList(
+          code,
+          startOfMonth,
+          startOfNextMonth,
+          work_code,
+          status,
+          page
+        )
         .subscribe(
           (response: any) => {
             this.total = response.total;
@@ -229,5 +241,69 @@ export class ReportStaffComponent implements OnInit {
     datepicker.close();
 
     this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
+  }
+
+  export() {
+    let filename = '';
+    if (this.searchForm.controls.month.value == '') {
+      const today = moment();
+      filename = `${today.month() + 1}_${today.year()}`;
+    } else {
+      filename = this.searchForm.controls.month.value;
+    }
+    filename = 'BaoCao_' + filename;
+    
+    const fromDate = this.date.value.add(1, 'M');
+    var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
+    
+    var toDate = this.date.value.add(1, 'M');
+    var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
+    this.date.setValue(this.date.value.subtract(2, 'M'));
+    this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
+
+    let code = this.searchForm.value.code;
+    let work_code = this.searchForm.value.work_code;
+    let status = this.searchForm.value.status;
+    this.operationApiService
+      .searchAllOperations(
+        code,
+        startOfMonth,
+        startOfNextMonth,
+        work_code,
+        status
+      )
+      .subscribe(
+        (response: any) => {
+          console.log(response);
+
+          let exportdatasource: any[] = [];
+          const operation = new Operation();
+          for (let response_data of response.data) {
+            let status_str = 'Hoàn thành';
+            if (response_data.status == '0') {
+              status_str = 'Chưa hoàn thành';
+            }
+            const work_str = operation.getOperation(
+              response_data.work_code
+            ).viewValue;
+
+            exportdatasource.push({
+              'STT': response_data.index,
+              'NVVH': response_data.operator,
+              'Công việc': work_str,
+              'Trạm': response_data.station_code,
+              'Trạng thái': status_str,
+              'Thời gian bắt đầu': response_data.start_date,
+              'Thời gian hoàn thành': response_data.end_date,
+              'Ghi chú': response_data.note,
+            });
+          }
+
+          this.exportService.exportExcel(exportdatasource, filename);
+        },
+        (error) => {
+          // handle error
+        }
+      );
   }
 }

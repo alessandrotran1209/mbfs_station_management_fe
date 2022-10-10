@@ -1,0 +1,58 @@
+<div class="hold-transition login-page">
+  <div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <img src="../assets/MFS.png" alt="" />
+      </div>
+      <div class="card-body">
+        <p class="login-box-msg">Đổi mật khẩu</p>
+
+        <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="password-detail">
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                type="password"
+                placeholder="Mật khẩu cũ"
+                formControlName="password"
+              />
+              <mat-error>{{ getErrorMessage("password") }}</mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              type="password"
+              placeholder="Mật khẩu mới"
+              formControlName="newPassword"
+            />
+            <mat-error>{{ getErrorMessage("newPassword") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              type="password"
+              placeholder="Nhập lại mật khẩu mới"
+              formControlName="dupNewPassword"
+            />
+            <mat-error>{{ getErrorMessage("dupNewPassword") }}</mat-error>
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-primary btn-block">
+                Đổi mật khẩu
+              </button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.login-box -->
+</div>

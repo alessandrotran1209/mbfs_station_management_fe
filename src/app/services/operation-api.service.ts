@@ -33,10 +33,11 @@ export class OperationApiService {
     stationCode: any,
     startDate: any,
     endDate: any,
+    workCode: any,
     status: any,
     page: any
   ) {
-    const url = `${this.baseUrl}/operation/q?stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&status=${status}&p=${page}`;
+    const url = `${this.baseUrl}/operation/q?stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&workCode=${workCode}&status=${status}&p=${page}`;
     return this.httpClient
       .get(url.replace('null', '').replace('null', ''))
       .pipe(map((res) => res));
@@ -75,6 +76,19 @@ export class OperationApiService {
   public getOperatorList() {
     return this.httpClient
       .get(`${this.baseUrl}/operator`)
+      .pipe(map((res) => res));
+  }
+
+  public searchAllOperations(
+    stationCode: any,
+    startDate: any,
+    endDate: any,
+    workCode: any,
+    status: any
+  ) {
+    const url = `${this.baseUrl}/operation/q?stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&workCode=${workCode}&status=${status}`;
+    return this.httpClient
+      .get(url.replace('null', '').replace('null', ''))
       .pipe(map((res) => res));
   }
 }

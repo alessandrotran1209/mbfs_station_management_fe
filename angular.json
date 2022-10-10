@@ -32,6 +32,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
+              "./node_modules/jquery/dist/jquery.js",
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
@@ -58,8 +59,8 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
-              "optimization": false,
+              "buildOptimizer": true,
+              "optimization": true,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,

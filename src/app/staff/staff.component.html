@@ -1,123 +1,134 @@
 <div class="station-container">
-  <h3>TÌM KIẾM</h3>
-  <div class="container-fluid">
-    <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
-      <div class="row">
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Mã trạm</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  placeholder="Điền mã trạm"
-                  formControlName="code"
-                />
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-panel-title></mat-panel-title>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> TÌM KIẾM </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="container-fluid">
+        <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Mã trạm</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      placeholder="Điền mã trạm"
+                      formControlName="code"
+                    />
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Từ ngày</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  [matDatepicker]="fromPicker"
-                  formControlName="fromDate"
-                  [max]="maxDate"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="fromPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #fromPicker></mat-datepicker>
-              </mat-form-field>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Từ ngày</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="fromPicker"
+                      formControlName="fromDate"
+                      [max]="maxDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="fromPicker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #fromPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Đến ngày</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  [matDatepicker]="toPicker"
-                  formControlName="toDate"
-                  [max]="maxDate"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="toPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #toPicker></mat-datepicker>
-              </mat-form-field>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Đến ngày</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="toPicker"
+                      formControlName="toDate"
+                      [max]="maxDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="toPicker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #toPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Trạng thái</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <mat-select formControlName="status">
+                      <mat-option
+                        *ngFor="let status of status_list"
+                        [value]="status.value"
+                      >
+                        {{ status.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-sm-1 offset-sm-2 d-flex align-items-center justify-content-end"
+            >
+              <div class="search-button">
+                <button
+                  mat-raised-button
+                  type="submit"
+                  class="button-search btn btn-lg"
+                >
+                  Tìm kiếm
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-1 d-flex align-items-center justify-content-end">
+              <div class="search-clear">
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="button-clear btn btn-lg"
+                  (click)="clearForm()"
+                >
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Trạng thái</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="status">
-                  <mat-option
-                    *ngFor="let status of status_list"
-                    [value]="status.value"
-                  >
-                    {{ status.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div
-          class="col-sm-1 offset-sm-2 d-flex align-items-center justify-content-end"
-        >
-          <div class="search-button">
-            <button
-              mat-raised-button
-              type="submit"
-              class="button-search btn btn-lg"
-            >
-              Tìm kiếm
-            </button>
-          </div>
-        </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-end">
-          <div class="search-clear">
-            <button
-              mat-flat-button
-              type="button"
-              class="button-clear btn btn-lg"
-              (click)="clearForm()"
-            >
-              Clear
-            </button>
-          </div>
-        </div>
+        </form>
       </div>
-    </form>
-  </div>
-
+    </mat-expansion-panel>
+  </mat-accordion>
   <mat-divider></mat-divider>
 
   <div class="row" style="margin-right: 0; margin-bottom: 2rem">
-    <div class="col-6 d-flex justify-content-start">
+    <div class="col-sm-8 d-flex justify-content-start">
       <h3>DANH SÁCH CÔNG VIỆC</h3>
     </div>
-    <div class="col-sm-1 offset-sm-5">
+    <div class="col-sm-2 offset-sm-2 d-flex align-items-center">
       <button
         mat-flat-button
         class="button-add btn btn-lg"
         (click)="openAddDialog()"
       >
-        Thêm mới
+        <span>Thêm mới</span>
       </button>
     </div>
   </div>
@@ -141,7 +152,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="start_date">
+    <!-- <ng-container matColumnDef="start_date">
       <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
       <td mat-cell *matCellDef="let element">{{ getDateOnly(element.start_date )}}</td>
     </ng-container>
@@ -149,29 +160,25 @@
     <ng-container matColumnDef="end_date">
       <th mat-header-cell *matHeaderCellDef>Ngày hoàn thành</th>
       <td mat-cell *matCellDef="let element">{{ getDateOnly(element.end_date) }}</td>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
       <td mat-cell *matCellDef="let element">
-        <div class="text-align-container text-align-container-style">
-          <div>
-            <span
-              *ngIf="element.status == 1"
-              class="material-symbols-rounded status-icon-done"
-            >
-              circle
-            </span>
-            <span *ngIf="element.status == 1">Hoàn thành</span>
-            <span
-              *ngIf="element.status == 0"
-              class="material-symbols-rounded status-icon-not"
-            >
-              circle
-            </span>
-            <span *ngIf="element.status == 0">Chưa hoàn thành</span>
-          </div>
-        </div>
+        <span
+          *ngIf="element.status == 1"
+          class="material-symbols-rounded status-icon-done"
+        >
+          circle
+        </span>
+        <!-- <span *ngIf="element.status == 1">Hoàn thành</span> -->
+        <span
+          *ngIf="element.status == 0"
+          class="material-symbols-rounded status-icon-not"
+        >
+          circle
+        </span>
+        <!-- <span *ngIf="element.status == 0">Chưa hoàn thành</span> -->
       </td>
     </ng-container>
 
