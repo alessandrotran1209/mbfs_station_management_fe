@@ -26,25 +26,29 @@ h3:first-child {
 
 .search-button {
   width: 100%;
-}
-.button-clear {
-  background-color: #f0f2f4;
-  height: 63.5px;
-  padding: 0;
-  width: 80% !important;
-}
 
-.button-search {
-  color: #ffffff;
-  background-color: #004aae;
-  height: 63.5px;
-  width: 80%;
+  button {
+    width: 100%;
+    color: #ffffff;
+    background-color: #004aae;
+    height: 8vh;
+  }
+}
+.search-clear {
+  width: 100%;
+
+  button {
+    width: 100%;
+    background-color: #f0f2f4;
+    height: 8vh;
+  }
 }
 
 .button-add {
   color: #ffffff;
   background-color: #004aae;
-  height: 50px;
+  // height: 50px;
+  // width: 100%;
 }
 
 .search-field {
@@ -72,20 +76,16 @@ table {
 }
 
 th.mat-header-cell {
+  font-size: 16px;
   line-height: 150%;
+  font-weight: 600;
   text-align: center;
-  white-space: normal;
-  word-wrap: break-word;
-  padding-right: 0.8vw;
-}
-.search-clear,
-.button-clear {
-  width: 100%;
 }
 
 a {
   color: #007bff !important;
 }
+
 a:hover {
   cursor: pointer;
 }
@@ -135,3 +135,7 @@ th {
 // table {
 //   width: 97vw;
 // }
+
+mat-form-field {
+  width: 100%;
+}

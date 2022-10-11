@@ -84,6 +84,8 @@ export class ReportStaffComponent implements OnInit {
   total_completed_operation: 0;
   total_uncompleted_operation: 0;
   operation_list: any[] = [];
+  panelOpenState = false;
+
   ngOnInit(): void {
     this.reactiveForm();
     var operation = new Operation();
@@ -252,10 +254,10 @@ export class ReportStaffComponent implements OnInit {
       filename = this.searchForm.controls.month.value;
     }
     filename = 'BaoCao_' + filename;
-    
+
     const fromDate = this.date.value.add(1, 'M');
     var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
-    
+
     var toDate = this.date.value.add(1, 'M');
     var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
     this.date.setValue(this.date.value.subtract(2, 'M'));
@@ -288,10 +290,10 @@ export class ReportStaffComponent implements OnInit {
             ).viewValue;
 
             exportdatasource.push({
-              'STT': response_data.index,
-              'NVVH': response_data.operator,
+              STT: response_data.index,
+              NVVH: response_data.operator,
               'Công việc': work_str,
-              'Trạm': response_data.station_code,
+              Trạm: response_data.station_code,
               'Trạng thái': status_str,
               'Thời gian bắt đầu': response_data.start_date,
               'Thời gian hoàn thành': response_data.end_date,

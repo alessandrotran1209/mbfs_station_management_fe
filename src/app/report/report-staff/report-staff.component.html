@@ -1,113 +1,123 @@
 <div class="station-container">
-  <h3>TÌM KIẾM</h3>
-  <div class="container-fluid">
-    <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
-      <div class="row">
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Mã trạm</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  placeholder="Điền mã trạm"
-                  formControlName="code"
-                />
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-panel-title></mat-panel-title>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> TÌM KIẾM </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="container-fluid">
+        <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Mã trạm</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      placeholder="Điền mã trạm"
+                      formControlName="code"
+                    />
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Tháng</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  [matDatepicker]="dp"
-                  [formControl]="date"
-                  [max]="maxDate"
-                  (click)="dp.open()"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="dp"
-                ></mat-datepicker-toggle>
-                <mat-datepicker
-                  #dp
-                  startView="multi-year"
-                  (yearSelected)="chosenYearHandler($event)"
-                  (monthSelected)="chosenMonthHandler($event, dp)"
-                  panelClass="example-month-picker"
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Tháng</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="dp"
+                      [formControl]="date"
+                      [max]="maxDate"
+                      (click)="dp.open()"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dp"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker
+                      #dp
+                      startView="multi-year"
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dp)"
+                      panelClass="example-month-picker"
+                    >
+                    </mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Công việc</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <mat-select formControlName="work_code">
+                      <mat-option
+                        *ngFor="let operation of operation_list"
+                        [value]="operation.value"
+                      >
+                        {{ operation.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Trạng thái</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <mat-select formControlName="status">
+                      <mat-option
+                        *ngFor="let status of status_list"
+                        [value]="status.value"
+                      >
+                        {{ status.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-1 offset-sm-2 d-flex align-items-center">
+              <div class="search-button">
+                <button
+                  mat-raised-button
+                  type="submit"
+                  class="button-search btn btn-lg"
                 >
-                </mat-datepicker>
-              </mat-form-field>
+                  Tìm kiếm
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-1 d-flex align-items-center">
+              <div class="search-clear">
+                <button
+                  mat-flat-button
+                  type="button"
+                  class="button-clear btn btn-lg"
+                  (click)="clearForm()"
+                >
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Công việc</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="work_code">
-                  <mat-option
-                    *ngFor="let operation of operation_list"
-                    [value]="operation.value"
-                  >
-                    {{ operation.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Trạng thái</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="status">
-                  <mat-option
-                    *ngFor="let status of status_list"
-                    [value]="status.value"
-                  >
-                    {{ status.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div
-          class="col-sm-1 offset-sm-2 d-flex align-items-center justify-content-end"
-        >
-          <div class="search-button">
-            <button
-              mat-raised-button
-              type="submit"
-              class="button-search btn btn-lg"
-            >
-              Tìm kiếm
-            </button>
-          </div>
-        </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-end">
-          <div class="search-clear">
-            <button
-              mat-flat-button
-              type="button"
-              class="button-clear btn btn-lg"
-              (click)="clearForm()"
-            >
-              Clear
-            </button>
-          </div>
-        </div>
+        </form>
       </div>
-    </form>
-  </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <mat-divider></mat-divider>
 
@@ -115,10 +125,7 @@
     <div class="row">
       <div class="col">
         <div class="row">
-          <div
-            class="col-3 d-flex justify-content-end"
-            style="margin-right: 3rem; margin-top: 1.5rem"
-          >
+          <div class="col-3 d-flex justify-content-center">
             <button
               mat-fab
               disabled="true"
@@ -128,7 +135,7 @@
               <span class="material-symbols-outlined"> close </span>
             </button>
           </div>
-          <div class="col d-flex justify-content-start" class="height: 10rem">
+          <div class="col d-flex justify-content-start" class="stats-detailed">
             <div>Tổng số công việc chưa hoàn thành</div>
             <div class="statistics-number-failed">
               {{ total_uncompleted_operation }}
@@ -145,10 +152,7 @@
       </div>
       <div class="col">
         <div class="row">
-          <div
-            class="col-3 d-flex justify-content-end"
-            style="margin-right: 3rem; margin-top: 1.5rem"
-          >
+          <div class="col-3 d-flex justify-content-center">
             <button
               mat-fab
               disabled="true"
@@ -158,7 +162,7 @@
               <span class="material-symbols-outlined"> check_circle </span>
             </button>
           </div>
-          <div class="col d-flex justify-content-start" class="height: 10rem">
+          <div class="col d-flex justify-content-start" class="stats-detailed">
             <div>Tổng số công việc đã hoàn thành</div>
             <div class="statistics-number-success">
               {{ total_completed_operation }}
@@ -230,14 +234,12 @@
           >
             circle
           </span>
-          <span *ngIf="element.status == 1">Hoàn thành</span>
           <span
             *ngIf="element.status == 0"
             class="material-symbols-rounded status-icon-not"
           >
             circle
           </span>
-          <span *ngIf="element.status == 0">Chưa hoàn thành</span>
         </div>
       </td>
     </ng-container>
