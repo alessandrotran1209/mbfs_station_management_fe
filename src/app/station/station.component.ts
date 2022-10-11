@@ -51,8 +51,8 @@ export class StationComponent implements OnInit {
 
   openDialog(data: any): void {
     const dialogRef = this.dialog.open(DialogStationInfoComponent, {
-      width: window.innerWidth * (772 / 1920) + 'px',
-      height: window.innerHeight * (539 / 1080) + 'px',
+      // width: window.innerWidth * (772 / 1920) + 'px',
+      // height: window.innerHeight * (539 / 1080) + 'px',
       data: data,
     });
   }
