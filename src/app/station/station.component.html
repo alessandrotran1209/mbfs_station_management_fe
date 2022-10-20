@@ -54,23 +54,22 @@
         </div>
         <div
           class="col-sm-1 offset-sm-6 d-flex align-items-center justify-content-end"
+          style="padding: 0"
         >
           <div class="search-button">
-            <button
-              mat-raised-button
-              type="submit"
-              class="button-search btn btn-lg"
-            >
+            <button type="submit" class="btn btn-primary btn-lg">
               Tìm kiếm
             </button>
           </div>
         </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-end">
+        <div
+          class="col-sm-1 d-flex align-items-center justify-content-end"
+          style="padding: 0"
+        >
           <div class="search-clear">
             <button
-              mat-flat-button
               type="button"
-              class="button-clear btn btn-lg"
+              class="btn btn-secondary btn-lg"
               (click)="clearForm()"
             >
               Clear
