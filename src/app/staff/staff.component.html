@@ -88,23 +88,22 @@
             </div>
             <div
               class="col-sm-1 offset-sm-2 d-flex align-items-center justify-content-end"
+              style="padding: 0"
             >
               <div class="search-button">
-                <button
-                  mat-raised-button
-                  type="submit"
-                  class="button-search btn btn-lg"
-                >
+                <button type="submit" class="btn btn-primary btn-lg">
                   Tìm kiếm
                 </button>
               </div>
             </div>
-            <div class="col-sm-1 d-flex align-items-center justify-content-end">
+            <div
+              class="col-sm-1 d-flex align-items-center justify-content-end"
+              style="padding: 0"
+            >
               <div class="search-clear">
                 <button
-                  mat-flat-button
                   type="button"
-                  class="button-clear btn btn-lg"
+                  class="btn btn-secondary btn-lg"
                   (click)="clearForm()"
                 >
                   Clear
@@ -119,13 +118,13 @@
   <mat-divider></mat-divider>
 
   <div class="row" style="margin-right: 0; margin-bottom: 2rem">
-    <div class="col-sm-11 d-flex justify-content-start">
+    <div class="col-sm-10 d-flex justify-content-start">
       <h3>DANH SÁCH CÔNG VIỆC</h3>
     </div>
-    <div class="col-sm-1 d-flex align-item-center">
+    <div class="col-sm-2 d-flex justify-content-end">
       <button
-        mat-flat-button
-        class="button-add btn btn-lg"
+        type="button"
+        class="btn-add btn btn-primary btn-lg btn-block"
         (click)="openAddDialog()"
       >
         Thêm mới

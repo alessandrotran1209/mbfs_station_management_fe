@@ -90,23 +90,21 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-1 offset-sm-2 d-flex align-items-center">
+            <div
+              class="col-sm-1 offset-sm-2 d-flex align-items-center"
+              style="padding: 0"
+            >
               <div class="search-button">
-                <button
-                  mat-raised-button
-                  type="submit"
-                  class="button-search btn btn-lg"
-                >
+                <button type="submit" class="btn btn-primary btn-lg">
                   Tìm kiếm
                 </button>
               </div>
             </div>
-            <div class="col-sm-1 d-flex align-items-center">
+            <div class="col-sm-1 d-flex align-items-center" style="padding: 0">
               <div class="search-clear">
                 <button
-                  mat-flat-button
                   type="button"
-                  class="button-clear btn btn-lg"
+                  class="btn btn-secondary btn-lg"
                   (click)="clearForm()"
                 >
                   Clear
@@ -188,7 +186,7 @@
       <h3>DANH SÁCH CÔNG VIỆC</h3>
     </div>
     <div class="col-sm-2 offset-sm-4 d-flex align-items-center">
-      <button mat-flat-button class="button-add btn btn-lg" (click)="export()">
+      <button class="btn btn-primary btn-lg btn-download" (click)="export()">
         <span class="material-symbols-outlined"> cloud_download </span>
         <span>Tải về báo cáo</span>
       </button>

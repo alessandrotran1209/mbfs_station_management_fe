@@ -86,7 +86,7 @@ export class OperationApiService {
     workCode: any,
     status: any
   ) {
-    const url = `${this.baseUrl}/operation/q?stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&workCode=${workCode}&status=${status}`;
+    const url = `${this.baseUrl}/operation/search_all/q?stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&workCode=${workCode}&status=${status}`;
     return this.httpClient
       .get(url.replace('null', '').replace('null', ''))
       .pipe(map((res) => res));
