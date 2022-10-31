@@ -1,116 +1,121 @@
 <div class="station-container">
-  <h3>TÌM KIẾM</h3>
-  <div class="container-fluid">
-    <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
-      <div class="row">
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Mã trạm</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  placeholder="Điền mã trạm"
-                  formControlName="code"
-                />
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-panel-title></mat-panel-title>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> TÌM KIẾM </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="container-fluid">
+        <form [formGroup]="searchForm" (ngSubmit)="onFormSubmit()">
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Mã trạm</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      placeholder="Điền mã trạm"
+                      formControlName="code"
+                    />
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Tỉnh</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select
-                  formControlName="province"
-                  (selectionChange)="updateProvince($event.value)"
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Tháng</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="dp"
+                      [formControl]="date"
+                      [max]="maxDate"
+                      (click)="dp.open()"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dp"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker
+                      #dp
+                      startView="multi-year"
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dp)"
+                      panelClass="example-month-picker"
+                    >
+                    </mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Công việc</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <mat-select formControlName="work_code">
+                      <mat-option
+                        *ngFor="let operation of operation_list"
+                        [value]="operation.value"
+                      >
+                        {{ operation.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Trạng thái</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <mat-select formControlName="status">
+                      <mat-option
+                        *ngFor="let status of status_list"
+                        [value]="status.value"
+                      >
+                        {{ status.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-sm-1 offset-sm-2 d-flex align-items-center"
+              style="padding: 0"
+            >
+              <div class="search-button">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  Tìm kiếm
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-1 d-flex align-items-center" style="padding: 0">
+              <div class="search-clear">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-lg"
+                  (click)="clearForm()"
                 >
-                  <mat-option
-                    *ngFor="let food of province_list"
-                    [value]="food.value"
-                  >
-                    {{ food.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Quận/ Huyện</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="district">
-                  <mat-option
-                    *ngFor="let food of districts"
-                    [value]="food.value"
-                  >
-                    {{ food.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Công việc</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="work">
-                  <mat-option *ngFor="let food of foods" [value]="food.value">
-                    {{ food.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="search-field">
-            <div class="search-title">Trạng thái</div>
-            <div class="search-input">
-              <mat-form-field appearance="outline">
-                <mat-select formControlName="district">
-                  <mat-option
-                    *ngFor="let district of status_list"
-                    [value]="district.value"
-                  >
-                    {{ district.viewValue }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-end">
-          <div class="search-button">
-            <button
-              mat-raised-button
-              type="submit"
-              class="button-search btn btn-lg"
-            >
-              Tìm kiếm
-            </button>
-          </div>
-        </div>
-        <div class="col-sm-1 d-flex align-items-center justify-content-end">
-          <div class="search-clear">
-            <button
-              mat-flat-button
-              class="button-clear btn btn-lg"
-              (click)="clearForm()"
-            >
-              Clear
-            </button>
-          </div>
-        </div>
+        </form>
       </div>
-    </form>
-  </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <mat-divider></mat-divider>
 
@@ -118,10 +123,7 @@
     <div class="row">
       <div class="col">
         <div class="row">
-          <div
-            class="col-3 d-flex justify-content-end"
-            style="margin-right: 3rem; margin-top: 1.5rem"
-          >
+          <div class="col-3 d-flex justify-content-center">
             <button
               mat-fab
               disabled="true"
@@ -131,25 +133,24 @@
               <span class="material-symbols-outlined"> close </span>
             </button>
           </div>
-          <div class="col d-flex justify-content-start" class="height: 10rem">
+          <div class="col d-flex justify-content-start" class="stats-detailed">
             <div>Tổng số công việc chưa hoàn thành</div>
-            <div class="statistics-number-failed">2</div>
-            <div>
+            <div class="statistics-number-failed">
+              {{ total_uncompleted_operation }}
+            </div>
+            <!-- <div>
               <span class="statistics-rate-failed"
                 ><span class="material-symbols-rounded"> expand_more </span
                 >12.1%</span
               >
               <span style="margin-left: 2rem">so với tháng trước</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
       <div class="col">
         <div class="row">
-          <div
-            class="col-3 d-flex justify-content-end"
-            style="margin-right: 3rem; margin-top: 1.5rem"
-          >
+          <div class="col-3 d-flex justify-content-center">
             <button
               mat-fab
               disabled="true"
@@ -159,16 +160,18 @@
               <span class="material-symbols-outlined"> check_circle </span>
             </button>
           </div>
-          <div class="col d-flex justify-content-start" class="height: 10rem">
+          <div class="col d-flex justify-content-start" class="stats-detailed">
             <div>Tổng số công việc đã hoàn thành</div>
-            <div class="statistics-number-success">28</div>
-            <div>
+            <div class="statistics-number-success">
+              {{ total_completed_operation }}
+            </div>
+            <!-- <div>
               <span class="statistics-rate-success"
                 ><span class="material-symbols-rounded"> expand_less </span
                 >12.1%</span
               >
               <span style="margin-left: 2rem">so với tháng trước</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -183,53 +186,65 @@
       <h3>DANH SÁCH CÔNG VIỆC</h3>
     </div>
     <div class="col-sm-2 offset-sm-4 d-flex align-items-center">
-      <button mat-flat-button class="button-add btn btn-lg">
+      <button class="btn btn-primary btn-lg btn-download" (click)="export()">
         <span class="material-symbols-outlined"> cloud_download </span>
         <span>Tải về báo cáo</span>
       </button>
     </div>
   </div>
-  <table mat-table [dataSource]="dataSource">
+  <table mat-table [dataSource]="datasource">
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef>STT</th>
-      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.index }}</td>
     </ng-container>
 
     <ng-container matColumnDef="code">
       <th mat-header-cell *matHeaderCellDef>Mã trạm</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.code }}
+        {{ element.station_code }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="operator">
+      <th mat-header-cell *matHeaderCellDef>NVVH</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.operator }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="work">
       <th mat-header-cell *matHeaderCellDef>Công việc</th>
-      <td mat-cell *matCellDef="let element">{{ element.work }}</td>
+      <td mat-cell *matCellDef="let element">
+        {{ element.operation_name.viewValue }}
+      </td>
     </ng-container>
 
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef>Ngày làm việc</th>
-      <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+    <ng-container matColumnDef="start_date">
+      <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
+      <td mat-cell *matCellDef="let element">{{ element.start_date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="end_date">
+      <th mat-header-cell *matHeaderCellDef>Ngày hoàn thành</th>
+      <td mat-cell *matCellDef="let element">{{ element.end_date }}</td>
     </ng-container>
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
       <td mat-cell *matCellDef="let element">
-        <div class="d-flex align-items-center" style="padding-left: 3rem">
+        <div class="d-flex align-items-center">
           <span
             *ngIf="element.status == 1"
             class="material-symbols-rounded status-icon-done"
           >
             circle
           </span>
-          <span *ngIf="element.status == 1">Hoàn thành</span>
           <span
             *ngIf="element.status == 0"
             class="material-symbols-rounded status-icon-not"
           >
             circle
           </span>
-          <span *ngIf="element.status == 0">Chưa hoàn thành</span>
         </div>
       </td>
     </ng-container>
@@ -237,4 +252,11 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+  <mat-paginator
+    [length]="total"
+    [pageSize]="10"
+    aria-label="Select page"
+    (page)="pageEvent = getServerData($event)"
+  >
+  </mat-paginator>
 </div>
