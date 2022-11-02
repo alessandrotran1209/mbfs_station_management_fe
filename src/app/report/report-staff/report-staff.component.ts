@@ -254,15 +254,21 @@ export class ReportStaffComponent implements OnInit {
       filename = this.searchForm.controls.month.value;
     }
     filename = 'BaoCao_' + filename;
-
+    
     const fromDate = this.date.value.add(1, 'M');
     var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
-
-    var toDate = this.date.value.add(1, 'M');
-    var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
+    if(this.date.value.month() == 11){
+      const month = 12
+      var startOfNextMonth = `1/${month}/${this.date.value.year()}`;
+    }
+    else {
+      var toDate = this.date.value.add(1, 'M');
+      var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
+    }    
+    
     this.date.setValue(this.date.value.subtract(2, 'M'));
     this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
-
+    
     let code = this.searchForm.value.code;
     let work_code = this.searchForm.value.work_code;
     let status = this.searchForm.value.status;
@@ -276,8 +282,6 @@ export class ReportStaffComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
-          console.log(response);
-
           let exportdatasource: any[] = [];
           const operation = new Operation();
           for (let response_data of response.data) {
