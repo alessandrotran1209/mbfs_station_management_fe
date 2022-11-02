@@ -43,7 +43,6 @@ export class LoginComponent implements OnInit {
     }
   }
   onSubmit(): void {
-    console.log(this.form.value);
     const { username, password } = this.form.value;
     this.authenService.login(username, password).subscribe(
       (data: any) => {

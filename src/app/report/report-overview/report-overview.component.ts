@@ -277,8 +277,6 @@ export class ReportOverviewComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
-          console.log(response);
-
           let exportdatasource: any[] = [];
           const operation = new Operation();
           for (let response_data of response.data) {
