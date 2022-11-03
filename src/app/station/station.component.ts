@@ -10,6 +10,11 @@ import 'rxjs/Rx';
 import { DialogStationInfoComponent } from '../dialog/dialog-station-info/dialog-station-info.component';
 import { ApiService } from '../services/api.service';
 import { Districts } from 'src/app/utils/districts';
+import { AuthService } from '../auth/auth.service';
+import * as XLSX from 'xlsx';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PizzaPartyComponent } from '../staff/staff.component';
+import { Response } from '@angular/http';
 
 @Component({
   selector: 'app-station',
@@ -20,7 +25,9 @@ export class StationComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public fb: FormBuilder,
-    public apiService: ApiService
+    private _snackBar: MatSnackBar,
+    public apiService: ApiService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -129,5 +136,100 @@ export class StationComponent implements OnInit {
       );
     }
     return event;
+  }
+
+  isAdminOnly() {
+    return this.authService.getDecodedToken().role == 'admin';
+  }
+
+  fileName = '';
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.fileName = file.name;
+    }
+
+    let workBook: XLSX.WorkBook = null;
+    let jsonData = null;
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' });
+      // const ws: XLSX.WorkSheet = workBook.Sheets[target];
+      jsonData = workBook.SheetNames.reduce((initial, name) => {
+        const sheet = workBook.Sheets[name];
+        return XLSX.utils.sheet_to_json(sheet);
+      }, {});
+
+      let stations_data = [];
+
+      for (let data of jsonData as []) {
+        try {
+          stations_data.push({
+            station_code: this._getValueWithVietnameseKey(
+              data,
+              'Tên trạm/mã tuyến cáp'
+            ),
+            group: this._getValueWithVietnameseKey(data, 'Tổ'),
+            region: this._getValueWithVietnameseKey(data, 'Đài'),
+            zone: this._getValueWithVietnameseKey(data, 'TT Mạng lưới'),
+            branch: this._getValueWithVietnameseKey(data, "MFS's Branch"),
+            type: this._getValueWithVietnameseKey(data, 'Type'),
+            address: this._getValueWithVietnameseKey(data, 'Địa chỉ'),
+            lat: this._getValueWithVietnameseKey(data, 'Vĩ độ'),
+            long: this._getValueWithVietnameseKey(data, 'Kinh độ'),
+            district: this._getValueWithVietnameseKey(data, 'Quận/Huyện'),
+            province: this._getValueWithVietnameseKey(data, 'Tỉnh'),
+            operator: this._getValueWithVietnameseKey(
+              data,
+              'Nhân viên vận hành'
+            ),
+            group_leader: this._getValueWithVietnameseKey(data, 'Tổ trưởng'),
+            phone_number: this._getValueWithVietnameseKey(
+              data,
+              'Số điện thoại'
+            ),
+          });
+        } catch (e) {
+          this._snackBar.openFromComponent(PizzaPartyComponent, {
+            data: 'File sai format',
+            duration: 2000,
+            panelClass: ['snack-failed'],
+          });
+        }
+      }
+      console.log(stations_data);
+
+      this.apiService.insertUpdateStations(stations_data).subscribe(
+        (response) => {
+          this._snackBar.openFromComponent(PizzaPartyComponent, {
+            data: 'Thêm mới/sửa đổi thành công',
+            duration: 2000,
+            panelClass: ['snack-notification'],
+          });
+        },
+        (error) => {
+          this._snackBar.openFromComponent(PizzaPartyComponent, {
+            data: 'Đã có lỗi xảy ra',
+            duration: 2000,
+            panelClass: ['snack-failed'],
+          });
+        }
+      );
+    };
+
+    reader.readAsBinaryString(file);
+  }
+
+  private _getValueWithVietnameseKey(obj: any, key: string) {
+    if (obj[key] === undefined) {
+      throw new Error('invalid key');
+    }
+    console.log(obj[key]);
+
+    return obj[key] as string;
   }
 }
