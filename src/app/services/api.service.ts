@@ -42,4 +42,16 @@ export class ApiService {
       .get(`${this.baseUrl}/statistics/top`)
       .pipe(map((res) => res));
   }
+
+  public insertUpdateStations(stations: any) {
+    return this.httpClient
+      .post(`${this.baseUrl}/insert-update-station`, stations, {
+        observe: 'response',
+      })
+      .pipe(
+        map((data) => {
+          return data.body;
+        })
+      );
+  }
 }
