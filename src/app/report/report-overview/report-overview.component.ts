@@ -258,9 +258,14 @@ export class ReportOverviewComponent implements OnInit {
 
     const fromDate = this.date.value.add(1, 'M');
     var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
+    if (this.date.value.month() == 11) {
+      const month = 12;
+      var startOfNextMonth = `1/${month}/${this.date.value.year()}`;
+    } else {
+      var toDate = this.date.value.add(1, 'M');
+      var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
+    }
 
-    var toDate = this.date.value.add(1, 'M');
-    var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
     this.date.setValue(this.date.value.subtract(2, 'M'));
     this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
 
@@ -290,7 +295,6 @@ export class ReportOverviewComponent implements OnInit {
 
             exportdatasource.push({
               STT: response_data.index,
-              Tổ: response_data.group,
               NVVH: response_data.operator,
               'Công việc': work_str,
               Trạm: response_data.station_code,
