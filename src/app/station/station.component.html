@@ -94,7 +94,7 @@
         #fileUpload
       />
 
-      <div class="file-upload">
+      <div class="file-upload" *ngIf="isAdminOnly()">
         {{ fileName || "No file uploaded yet." }}
 
         <button
