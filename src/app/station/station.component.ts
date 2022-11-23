@@ -168,7 +168,7 @@ export class StationComponent implements OnInit {
 
       for (let data of jsonData as []) {
         try {
-          stations_data.push({
+          const insert_data = {
             station_code: this._getValueWithVietnameseKey(
               data,
               'Tên trạm/mã tuyến cáp'
@@ -192,7 +192,9 @@ export class StationComponent implements OnInit {
               data,
               'Số điện thoại'
             ),
-          });
+          };
+          stations_data.push(insert_data);
+          console.log(insert_data);
         } catch (e) {
           this._snackBar.openFromComponent(PizzaPartyComponent, {
             data: 'File sai format',
@@ -201,7 +203,6 @@ export class StationComponent implements OnInit {
           });
         }
       }
-      console.log(stations_data);
 
       this.apiService.insertUpdateStations(stations_data).subscribe(
         (response) => {
@@ -226,10 +227,10 @@ export class StationComponent implements OnInit {
 
   private _getValueWithVietnameseKey(obj: any, key: string) {
     if (obj[key] === undefined) {
+      console.log(key);
+
       throw new Error('invalid key');
     }
-    console.log(obj[key]);
-
     return obj[key] as string;
   }
 }

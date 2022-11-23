@@ -254,21 +254,20 @@ export class ReportStaffComponent implements OnInit {
       filename = this.searchForm.controls.month.value;
     }
     filename = 'BaoCao_' + filename;
-    
+
     const fromDate = this.date.value.add(1, 'M');
     var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
-    if(this.date.value.month() == 11){
-      const month = 12
+    if (this.date.value.month() == 11) {
+      const month = 12;
       var startOfNextMonth = `1/${month}/${this.date.value.year()}`;
-    }
-    else {
+    } else {
       var toDate = this.date.value.add(1, 'M');
       var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
-    }    
-    
+    }
+
     this.date.setValue(this.date.value.subtract(2, 'M'));
     this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
-    
+
     let code = this.searchForm.value.code;
     let work_code = this.searchForm.value.work_code;
     let status = this.searchForm.value.status;
@@ -296,6 +295,8 @@ export class ReportStaffComponent implements OnInit {
             exportdatasource.push({
               STT: response_data.index,
               NVVH: response_data.operator,
+              'Tên NVVH': response_data.operator_fullname,
+              Tổ: response_data.group,
               'Công việc': work_str,
               Trạm: response_data.station_code,
               'Trạng thái': status_str,
