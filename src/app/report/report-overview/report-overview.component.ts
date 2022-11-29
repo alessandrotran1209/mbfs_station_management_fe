@@ -23,20 +23,9 @@ import { default as _rollupMoment, Moment } from 'moment';
 import { ExportService } from 'src/app/services/export.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { DAY_MONTH_YEAR } from 'src/app/utils/dateformat';
 
 const moment = _rollupMoment || _moment;
-
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'app-report-overview',
@@ -49,7 +38,7 @@ export const MY_FORMATS = {
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: DAY_MONTH_YEAR },
   ],
 })
 export class ReportOverviewComponent implements OnInit {
