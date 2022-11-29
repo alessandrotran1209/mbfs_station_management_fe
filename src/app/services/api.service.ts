@@ -54,4 +54,10 @@ export class ApiService {
         })
       );
   }
+
+  public prefetchSearchData() {
+    const url = `${this.baseUrl}/station/prefetch`;
+
+    return this.httpClient.get(url).pipe(map((res) => res));
+  }
 }

@@ -28,30 +28,31 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
               <div class="search-field">
-                <div class="search-title">Tháng</div>
+                <div class="search-title">Thời gian</div>
                 <div class="search-input">
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      [matDatepicker]="dp"
-                      [formControl]="date"
-                      [max]="maxDate"
-                      (click)="dp.open()"
-                    />
+                  <mat-form-field appearance="fill">
+                    <mat-date-range-input
+                      [formGroup]="range"
+                      [rangePicker]="picker"
+                    >
+                      <input
+                        matStartDate
+                        formControlName="start"
+                        placeholder="Ngày bắt đầu"
+                      />
+                      <input
+                        matEndDate
+                        formControlName="end"
+                        placeholder="Ngày kết thúc"
+                      />
+                    </mat-date-range-input>
                     <mat-datepicker-toggle
                       matSuffix
-                      [for]="dp"
+                      [for]="picker"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker
-                      #dp
-                      startView="multi-year"
-                      (yearSelected)="chosenYearHandler($event)"
-                      (monthSelected)="chosenMonthHandler($event, dp)"
-                      panelClass="example-month-picker"
-                    >
-                    </mat-datepicker>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
                   </mat-form-field>
                 </div>
               </div>
@@ -90,10 +91,7 @@
                 </div>
               </div>
             </div>
-            <div
-              class="col-sm-1 offset-sm-2 d-flex align-items-center"
-              style="padding: 0"
-            >
+            <div class="col-sm-1 d-flex align-items-center" style="padding: 0">
               <div class="search-button">
                 <button type="submit" class="btn btn-primary btn-lg">
                   Tìm kiếm
@@ -248,6 +246,7 @@
   <mat-paginator
     [length]="total"
     [pageSize]="10"
+    [pageIndex]="pageIndex"
     aria-label="Select page"
     (page)="pageEvent = getServerData($event)"
   >

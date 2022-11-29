@@ -18,19 +18,14 @@ import {
 } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 
-// Depending on whether rollup is used, moment needs to be imported differently.
-// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
-// syntax. However, rollup creates a synthetic default module and we thus need to import it using
-// the `default as` syntax.
 import * as _moment from 'moment';
-// tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
 import { ExportService } from 'src/app/services/export.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const moment = _rollupMoment || _moment;
 
-// See the Moment.js docs for the meaning of these formats:
-// https://momentjs.com/docs/#/displaying/format/
 export const MY_FORMATS = {
   parse: {
     dateInput: 'MM/YYYY',
@@ -42,27 +37,12 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-export interface PeriodicElement {
-  position: number;
-  code: string;
-  work: string;
-  date: string;
-  status: number;
-}
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-report-overview',
   templateUrl: './report-overview.component.html',
   styleUrls: ['./report-overview.component.scss'],
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
@@ -85,6 +65,13 @@ export class ReportOverviewComponent implements OnInit {
   total_uncompleted_operation: 0;
   operation_list: any[] = [];
   panelOpenState = false;
+  station_list: any[] = [];
+  province_set = new Set<string>();
+  district_set = new Set<any>();
+  district_list: string[] = [];
+  filteredOptions: Observable<any[]>;
+  provincefilteredOptions: Observable<any[]>;
+  districtfilteredOptions: Observable<any[]>;
 
   ngOnInit(): void {
     this.reactiveForm();
@@ -103,16 +90,51 @@ export class ReportOverviewComponent implements OnInit {
         response.data.total_uncompleted_operation;
     });
 
-    this.getServerData(null, false);
+    this.apiService.prefetchSearchData().subscribe((response: any) => {
+      for (var resp of response.data) {
+        this.station_list.push(resp);
+        this.province_set.add(resp.province);
+        this.district_set.add({
+          province: resp.province,
+          district: resp.district,
+        });
+      }
+      this.filteredOptions = this.searchForm.controls.code.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
+
+      this.provincefilteredOptions =
+        this.searchForm.controls.province.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._provincefilter(value || ''))
+        );
+
+      this.districtfilteredOptions =
+        this.searchForm.controls.district.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._districtfilter(value || ''))
+        );
+    });
+
+    this.getServerData(null);
   }
 
   searchForm!: FormGroup;
+  range!: FormGroup;
+  isSearching = false;
 
   reactiveForm() {
+    this.range = new FormGroup({
+      start: new FormControl(),
+      end: new FormControl(),
+    });
+
     this.searchForm = this.fb.group({
       code: [''],
-      month: [''],
       work_code: [''],
+      province: [''],
+      district: [''],
       status: [''],
     });
   }
@@ -127,7 +149,7 @@ export class ReportOverviewComponent implements OnInit {
     'status',
   ];
 
-  status_list: Food[] = [
+  status_list: any[] = [
     {
       value: '0',
       viewValue: 'Chưa hoàn thành',
@@ -140,12 +162,13 @@ export class ReportOverviewComponent implements OnInit {
 
   clearForm(): void {
     this.reactiveForm();
-    this.date = new FormControl(moment());
-    this.getServerData(null, false);
+    this.isSearching = false;
+    this.getServerData(null);
   }
 
   onFormSubmit(): void {
-    this.getServerData(null, true);
+    this.isSearching = true;
+    this.getServerData(null);
   }
 
   maxDate: Date = new Date();
@@ -156,39 +179,32 @@ export class ReportOverviewComponent implements OnInit {
   pageSize: number = 10;
   length: number;
   total: number;
-  public getServerData(event?: PageEvent, isSearching?: boolean) {
-    if (isSearching) {
+
+  public getServerData(event?: PageEvent) {
+    if (this.isSearching) {
       let page = 1;
       if (event != null) {
         page = event.pageIndex + 1;
       }
 
-      const fromDate = this.date.value.add(1, 'M');
-      var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
-
-      const toDate = fromDate.add(1, 'M');
-      var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
-
-      this.date.setValue(this.date.value.subtract(2, 'M'));
+      const fromDate = moment(this.range.controls['start'].value).format(
+        'DD/MM/YYYY'
+      );
+      const toDate = moment(this.range.controls['end'].value).format(
+        'DD/MM/YYYY'
+      );
 
       let code = this.searchForm.value.code;
       const work_code = this.searchForm.value.work_code;
 
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(
-          code,
-          startOfMonth,
-          startOfNextMonth,
-          work_code,
-          status,
-          page
-        )
+        .searchOperationList(code, fromDate, toDate, work_code, status, page)
         .subscribe(
           (response: any) => {
             this.total = response.total;
             this.datasource = response.data;
-            this.pageIndex = response.pageIndex;
+            this.pageIndex = page - 1;
             this.pageSize = response.pageSize;
             this.length = response.length;
 
@@ -210,7 +226,7 @@ export class ReportOverviewComponent implements OnInit {
         (response: any) => {
           this.total = response.total;
           this.datasource = response.data;
-          this.pageIndex = response.pageIndex;
+          this.pageIndex = page - 1;
           this.pageSize = response.pageSize;
           this.length = response.length;
 
@@ -227,59 +243,20 @@ export class ReportOverviewComponent implements OnInit {
     return event;
   }
 
-  date = new FormControl(moment());
-  chosenYearHandler(normalizedYear: Moment) {
-    const ctrlValue = this.date.value;
-    ctrlValue.year(normalizedYear.year());
-    this.date.setValue(ctrlValue);
-  }
-
-  chosenMonthHandler(
-    normalizedMonth: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = this.date.value;
-    ctrlValue.month(normalizedMonth.month());
-    this.date.setValue(ctrlValue);
-    datepicker.close();
-
-    this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
-  }
-
   export() {
     let filename = '';
-    if (this.searchForm.controls.month.value == '') {
-      const today = moment();
-      filename = `${today.month() + 1}_${today.year()}`;
-    } else {
-      filename = this.searchForm.controls.month.value;
-    }
-    filename = 'BaoCao_' + filename;
 
-    const fromDate = this.date.value.add(1, 'M');
-    var startOfMonth = `1/${fromDate.month()}/${fromDate.year()}`;
-    if (this.date.value.month() == 11) {
-      const month = 12;
-      var startOfNextMonth = `1/${month}/${this.date.value.year()}`;
-    } else {
-      var toDate = this.date.value.add(1, 'M');
-      var startOfNextMonth = `1/${toDate.month()}/${toDate.year()}`;
-    }
-
-    this.date.setValue(this.date.value.subtract(2, 'M'));
-    this.searchForm.controls.month.setValue(this.date.value.format('MM/YYYY'));
+    var fromDate = moment(this.range.controls['start'].value).format(
+      'DD/MM/YYYY'
+    );
+    var toDate = moment(this.range.controls['end'].value).format('DD/MM/YYYY');
+    filename += `${fromDate}_${toDate}`;
 
     let code = this.searchForm.value.code;
     let work_code = this.searchForm.value.work_code;
     let status = this.searchForm.value.status;
     this.operationApiService
-      .searchAllOperations(
-        code,
-        startOfMonth,
-        startOfNextMonth,
-        work_code,
-        status
-      )
+      .searchAllOperations(code, fromDate, toDate, work_code, status)
       .subscribe(
         (response: any) => {
           let exportdatasource: any[] = [];
@@ -311,5 +288,38 @@ export class ReportOverviewComponent implements OnInit {
           // handle error
         }
       );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.station_list.filter((option) =>
+      option.station_code.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _provincefilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return [...this.province_set].filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private _districtfilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.district_list.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  updateDistricts(event: any) {
+    this.district_list = [];
+    [...this.district_set].filter((value) => {
+      if (
+        !this.district_list.includes(value.district) &&
+        value.province == event.option.value
+      ) {
+        this.district_list.push(value.district);
+      }
+    });
   }
 }
