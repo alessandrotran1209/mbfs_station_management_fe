@@ -194,7 +194,7 @@ export class StaffComponent implements OnInit {
       let code = this.searchForm.value.code;
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(code, fromDate, toDate, '', status, page)
+        .searchOperationList(code, fromDate, toDate, '', status, page, '', '')
         .subscribe(
           (response: any) => {
             this.total = response.total;

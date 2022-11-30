@@ -144,7 +144,16 @@ export class ReportStaffComponent implements OnInit {
 
       let status = this.searchForm.value.status;
       this.operationApiService
-        .searchOperationList(code, fromDate, toDate, work_code, status, page)
+        .searchOperationList(
+          code,
+          fromDate,
+          toDate,
+          work_code,
+          status,
+          page,
+          '',
+          ''
+        )
         .subscribe(
           (response: any) => {
             this.total = response.total;
@@ -197,11 +206,28 @@ export class ReportStaffComponent implements OnInit {
     );
     var toDate = moment(this.range.controls['end'].value).format('DD/MM/YYYY');
     filename += `${fromDate}_${toDate}`;
+
+    if (fromDate == 'Invalid date') fromDate = '';
+    if (toDate == 'Invalid date') toDate = '';
+    if (fromDate == '' && toDate == '') {
+      filename = 'BaoCao_All';
+    }
+
     let code = this.searchForm.value.code;
     let work_code = this.searchForm.value.work_code;
     let status = this.searchForm.value.status;
+    const province = this.searchForm.value.province;
+    const district = this.searchForm.value.district;
     this.operationApiService
-      .searchAllOperations(code, fromDate, toDate, work_code, status)
+      .searchAllOperations(
+        code,
+        fromDate,
+        toDate,
+        work_code,
+        status,
+        province,
+        district
+      )
       .subscribe(
         (response: any) => {
           let exportdatasource: any[] = [];
@@ -211,6 +237,7 @@ export class ReportStaffComponent implements OnInit {
             if (response_data.status == '0') {
               status_str = 'Chưa hoàn thành';
             }
+
             const work_str = operation.getOperation(
               response_data.work_code
             ).viewValue;

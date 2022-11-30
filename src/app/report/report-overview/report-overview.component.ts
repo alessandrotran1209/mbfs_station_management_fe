@@ -79,32 +79,7 @@ export class ReportOverviewComponent implements OnInit {
         response.data.total_uncompleted_operation;
     });
 
-    this.apiService.prefetchSearchData().subscribe((response: any) => {
-      for (var resp of response.data) {
-        this.station_list.push(resp);
-        this.province_set.add(resp.province);
-        this.district_set.add({
-          province: resp.province,
-          district: resp.district,
-        });
-      }
-      this.filteredOptions = this.searchForm.controls.code.valueChanges.pipe(
-        startWith(''),
-        map((value) => this._filter(value || ''))
-      );
-
-      this.provincefilteredOptions =
-        this.searchForm.controls.province.valueChanges.pipe(
-          startWith(''),
-          map((value) => this._provincefilter(value || ''))
-        );
-
-      this.districtfilteredOptions =
-        this.searchForm.controls.district.valueChanges.pipe(
-          startWith(''),
-          map((value) => this._districtfilter(value || ''))
-        );
-    });
+    this.prefetchData();
 
     this.getServerData(null);
   }
@@ -152,6 +127,7 @@ export class ReportOverviewComponent implements OnInit {
   clearForm(): void {
     this.reactiveForm();
     this.isSearching = false;
+    this.prefetchData();
     this.getServerData(null);
   }
 
@@ -176,19 +152,33 @@ export class ReportOverviewComponent implements OnInit {
         page = event.pageIndex + 1;
       }
 
-      const fromDate = moment(this.range.controls['start'].value).format(
+      let fromDate = moment(this.range.controls['start'].value).format(
         'DD/MM/YYYY'
       );
-      const toDate = moment(this.range.controls['end'].value).format(
+      let toDate = moment(this.range.controls['end'].value).format(
         'DD/MM/YYYY'
       );
+
+      if (fromDate == 'Invalid date') fromDate = '';
+      if (toDate == 'Invalid date') toDate = '';
 
       let code = this.searchForm.value.code;
       const work_code = this.searchForm.value.work_code;
 
       let status = this.searchForm.value.status;
+      const province = this.searchForm.value.province;
+      const district = this.searchForm.value.district;
       this.operationApiService
-        .searchOperationList(code, fromDate, toDate, work_code, status, page)
+        .searchOperationList(
+          code,
+          fromDate,
+          toDate,
+          work_code,
+          status,
+          page,
+          province,
+          district
+        )
         .subscribe(
           (response: any) => {
             this.total = response.total;
@@ -233,7 +223,7 @@ export class ReportOverviewComponent implements OnInit {
   }
 
   export() {
-    let filename = '';
+    let filename = 'BaoCao_';
 
     var fromDate = moment(this.range.controls['start'].value).format(
       'DD/MM/YYYY'
@@ -241,34 +231,68 @@ export class ReportOverviewComponent implements OnInit {
     var toDate = moment(this.range.controls['end'].value).format('DD/MM/YYYY');
     filename += `${fromDate}_${toDate}`;
 
+    if (fromDate == 'Invalid date') fromDate = '';
+    if (toDate == 'Invalid date') toDate = '';
+    if (fromDate == '' && toDate == '') {
+      filename = 'BaoCao_All';
+    }
+
     let code = this.searchForm.value.code;
     let work_code = this.searchForm.value.work_code;
     let status = this.searchForm.value.status;
+    const province = this.searchForm.value.province;
+    const district = this.searchForm.value.district;
     this.operationApiService
-      .searchAllOperations(code, fromDate, toDate, work_code, status)
+      .searchAllOperations(
+        code,
+        fromDate,
+        toDate,
+        work_code,
+        status,
+        province,
+        district
+      )
       .subscribe(
         (response: any) => {
           let exportdatasource: any[] = [];
           const operation = new Operation();
           for (let response_data of response.data) {
-            let status_str = 'Hoàn thành';
-            if (response_data.status == '0') {
-              status_str = 'Chưa hoàn thành';
-            }
-            const work_str = operation.getOperation(
-              response_data.work_code
-            ).viewValue;
+            try {
+              let status_str = 'Hoàn thành';
+              if (response_data.status == '0') {
+                status_str = 'Chưa hoàn thành';
+              }
 
-            exportdatasource.push({
-              STT: response_data.index,
-              NVVH: response_data.operator,
-              'Công việc': work_str,
-              Trạm: response_data.station_code,
-              'Trạng thái': status_str,
-              'Thời gian bắt đầu': response_data.start_date,
-              'Thời gian hoàn thành': response_data.end_date,
-              'Ghi chú': response_data.note,
-            });
+              if (
+                operation.getOperation(response_data.work_code) == undefined
+              ) {
+                throw new Error(response_data);
+              }
+
+              const work_str = operation.getOperation(
+                response_data.work_code
+              ).viewValue;
+
+              exportdatasource.push({
+                STT: response_data.index,
+                NVVH: response_data.operator,
+                'Tên NVVH': response_data.operator_fullname,
+                Tổ: response_data.group,
+                'Công việc': work_str,
+                Trạm: response_data.station_code,
+                'Trạng thái': status_str,
+                'Thời gian bắt đầu': response_data.start_date,
+                'Thời gian hoàn thành': response_data.end_date,
+                'Ghi chú': response_data.note,
+              });
+            } catch (e) {
+              const result = (e as Error).message;
+              if (typeof e === 'string') {
+                console.log(e.toUpperCase());
+              } else if (e instanceof Error) {
+                console.log(e.message);
+              }
+            }
           }
 
           this.exportService.exportExcel(exportdatasource, filename);
@@ -309,6 +333,35 @@ export class ReportOverviewComponent implements OnInit {
       ) {
         this.district_list.push(value.district);
       }
+    });
+  }
+
+  prefetchData() {
+    this.apiService.prefetchSearchData().subscribe((response: any) => {
+      for (var resp of response.data) {
+        this.station_list.push(resp);
+        this.province_set.add(resp.province);
+        this.district_set.add({
+          province: resp.province,
+          district: resp.district,
+        });
+      }
+      this.filteredOptions = this.searchForm.controls.code.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
+
+      this.provincefilteredOptions =
+        this.searchForm.controls.province.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._provincefilter(value || ''))
+        );
+
+      this.districtfilteredOptions =
+        this.searchForm.controls.district.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._districtfilter(value || ''))
+        );
     });
   }
 }
