@@ -132,13 +132,14 @@ export class ReportStaffComponent implements OnInit {
         page = event.pageIndex + 1;
       }
 
-      const fromDate = moment(this.range.controls['start'].value).format(
+      let fromDate = moment(this.range.controls['start'].value).format(
         'DD/MM/YYYY'
       );
-      const toDate = moment(this.range.controls['end'].value).format(
+      let toDate = moment(this.range.controls['end'].value).format(
         'DD/MM/YYYY'
       );
-
+      if (fromDate == 'Invalid date') fromDate = '';
+      if (toDate == 'Invalid date') toDate = '';
       let code = this.searchForm.value.code;
       const work_code = this.searchForm.value.work_code;
 
@@ -199,7 +200,7 @@ export class ReportStaffComponent implements OnInit {
   }
 
   export() {
-    let filename = '';
+    let filename = 'BaoCao_';
 
     var fromDate = moment(this.range.controls['start'].value).format(
       'DD/MM/YYYY'
