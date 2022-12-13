@@ -114,3 +114,11 @@
     padding: 0;
   }
 }
+
+.mat-nested-tree-node .mat-nested-tree-node .mat-tree-node {
+  margin-left: 1.4rem;
+}
+
+.mat-nested-tree-node .mat-nested-tree-node div:last-child .mat-tree-node {
+  margin-left: 2.8rem;
+}

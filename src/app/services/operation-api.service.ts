@@ -101,4 +101,23 @@ export class OperationApiService {
       .get(url.replace('null', '').replace('null', ''))
       .pipe(map((res) => res));
   }
+
+  public searchZoneOperations(
+    zone: any,
+    stationCode: any,
+    startDate: any,
+    endDate: any,
+    workCode: any,
+    status: any,
+    province: any,
+    district: any,
+    page: any
+  ) {
+    const url = `${this.baseUrl}/operation/zone/q?zone=${zone}&stationCode=${stationCode}&startDate=${startDate}&endDate=${endDate}&workCode=${workCode}&status=${status}&province=${province}&district=${district}&p=${page}`;
+    console.log(url);
+
+    return this.httpClient
+      .get(url.replace('null', '').replace('null', ''))
+      .pipe(map((res) => res));
+  }
 }

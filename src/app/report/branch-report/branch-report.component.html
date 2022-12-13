@@ -36,6 +36,58 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Tỉnh/Thành phố</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="province"
+                      [matAutocomplete]="autoprovince"
+                    />
+                    <mat-autocomplete
+                      #autoprovince="matAutocomplete"
+                      (optionSelected)="updateDistricts($event)"
+                    >
+                      <mat-option
+                        *ngFor="
+                          let provinceOption of provincefilteredOptions | async
+                        "
+                        [value]="provinceOption"
+                      >
+                        {{ provinceOption }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="search-field">
+                <div class="search-title">Quận/ Huyện</div>
+                <div class="search-input">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="district"
+                      [matAutocomplete]="autodistrict"
+                      name="district"
+                    />
+                    <mat-autocomplete #autodistrict="matAutocomplete">
+                      <mat-option
+                        *ngFor="let district of district_list"
+                        [value]="district"
+                      >
+                        {{ district }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
             <div class="col-sm-4">
               <div class="search-field">
                 <div class="search-title">Thời gian</div>
@@ -125,7 +177,7 @@
 
   <mat-divider></mat-divider>
 
-  <div class="statistics -chart">
+  <!-- <div class="statistics -chart">
     <div class="row">
       <div class="col">
         <div class="row">
@@ -144,13 +196,13 @@
             <div class="statistics-number-failed">
               {{ total_uncompleted_operation }}
             </div>
-            <!-- <div>
+            <div>
               <span class="statistics-rate-failed"
                 ><span class="material-symbols-rounded"> expand_more </span
                 >12.1%</span
               >
               <span style="margin-left: 2rem">so với tháng trước</span>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -171,18 +223,18 @@
             <div class="statistics-number-success">
               {{ total_completed_operation }}
             </div>
-            <!-- <div>
+            <div>
               <span class="statistics-rate-success"
                 ><span class="material-symbols-rounded"> expand_less </span
                 >12.1%</span
               >
               <span style="margin-left: 2rem">so với tháng trước</span>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div
     class="row"
@@ -208,6 +260,13 @@
       <th mat-header-cell *matHeaderCellDef>Mã trạm</th>
       <td mat-cell *matCellDef="let element">
         {{ element.station_code }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="operator">
+      <th mat-header-cell *matHeaderCellDef>NVVH</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.operator }}
       </td>
     </ng-container>
 
@@ -245,8 +304,8 @@
             circle
           </span>
         </div>
-      </td>
-    </ng-container>
+      </td> </ng-container
+    >z
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

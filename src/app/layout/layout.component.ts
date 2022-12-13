@@ -49,6 +49,26 @@ const TREE_DATA: FoodNode[] = [
         icon: 'text_snippet',
         is_active: false,
         route: '/report/overview',
+        children: [
+          {
+            name: 'Báo cáo MLMB',
+            icon: 'analytics',
+            is_active: false,
+            route: '/report/overview/MLMB',
+          },
+          {
+            name: 'Báo cáo MLMT',
+            icon: 'analytics',
+            is_active: false,
+            route: '/report/overview/MLMT',
+          },
+          {
+            name: 'Báo cáo MLMN',
+            icon: 'analytics',
+            is_active: false,
+            route: '/report/overview/MLMN',
+          },
+        ],
       },
     ],
   },
@@ -112,8 +132,18 @@ export class LayoutComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  isAdminOnly(name: any) {
-    if (name == 'Báo cáo chi tiết') {
+  isAdminOnly(route: any) {
+    if (route.includes('/report/overview')) {
+      return this.authService.getDecodedToken().role == 'admin';
+    }
+    return true;
+  }
+
+  isDisplayable(object: any) {
+    if (object.name != 'Báo cáo chi tiết') {
+      return true;
+    }
+    if (object.route.includes('/report/overview')) {
       return this.authService.getDecodedToken().role == 'admin';
     }
     return true;

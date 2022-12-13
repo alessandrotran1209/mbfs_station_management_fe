@@ -60,4 +60,10 @@ export class ApiService {
 
     return this.httpClient.get(url).pipe(map((res) => res));
   }
+
+  public prefetchSearchDataByZone(zone: string) {
+    const url = `${this.baseUrl}/station/prefetch/q?zone=${zone}`;
+
+    return this.httpClient.get(url).pipe(map((res) => res));
+  }
 }

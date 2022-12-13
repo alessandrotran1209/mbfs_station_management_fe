@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { OperationApiService } from 'src/app/services/operation-api.service';
 import { Operation } from 'src/app/utils/operation';
 import { ExportService } from 'src/app/services/export.service';
+import { map, startWith } from 'rxjs/operators';
 
 import {
   MomentDateAdapter,
@@ -16,7 +17,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-
+import { Observable } from 'rxjs';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 
@@ -53,6 +54,8 @@ export class ReportStaffComponent implements OnInit {
   range!: FormGroup;
   searchForm!: FormGroup;
   isSearching = false;
+  station_list: any[] = [];
+  filteredOptions: Observable<any[]>;
 
   ngOnInit(): void {
     this.reactiveForm();
@@ -71,6 +74,7 @@ export class ReportStaffComponent implements OnInit {
         response.data.total_uncompleted_operation;
     });
 
+    this.prefetchData();
     this.getServerData(null, false);
   }
 
@@ -85,6 +89,13 @@ export class ReportStaffComponent implements OnInit {
       work_code: [''],
       status: [''],
     });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.station_list.filter((option) =>
+      option.station_code.toLowerCase().includes(filterValue)
+    );
   }
 
   displayedColumns: string[] = [
@@ -110,6 +121,7 @@ export class ReportStaffComponent implements OnInit {
   clearForm(): void {
     this.isSearching = false;
     this.reactiveForm();
+    this.prefetchData();
     this.getServerData(null);
   }
 
@@ -263,5 +275,18 @@ export class ReportStaffComponent implements OnInit {
           // handle error
         }
       );
+  }
+
+  prefetchData() {
+    this.apiService.prefetchSearchData().subscribe((response: any) => {
+      for (var resp of response.data) {
+        this.station_list.push(resp);
+      }
+    });
+
+    this.filteredOptions = this.searchForm.controls.code.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || ''))
+    );
   }
 }

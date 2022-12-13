@@ -18,7 +18,7 @@
         matTreeNodeToggle
         [ngClass]="{ 'is-active': node.is_active == true }"
       >
-        <div class="option" *ngIf="isAdminOnly(node.name)">
+        <div class="option" *ngIf="isAdminOnly(node.route)">
           <button
             class="option-button"
             mat-button
@@ -39,10 +39,15 @@
         <div class="mat-tree-node">
           <div
             class="option"
+            *ngIf="isDisplayable(node)"
             [ngClass]="{ 'is-active': node.is_active == true }"
             matTreeNodeToggle
           >
-            <button class="option-button" mat-button>
+            <button
+              class="option-button"
+              mat-button
+              (click)="isActive(node.name); navigate(node.route)"
+            >
               <span class="material-symbols-rounded option-icon">
                 {{ node.icon }}
               </span>
